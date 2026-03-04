@@ -1,20 +1,22 @@
-from pymongo import MongoClient
-from dotenv import load_dotenv
 import os
-from pathlib import Path
+from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
 
-# Load backend/.env reliably even when uvicorn reloads
-env_path = Path(__file__).resolve().parents[2] / ".env"
-load_dotenv(env_path)
+load_dotenv()
 
-MONGODB_URI = os.getenv("MONGODB_URI")
-DB_NAME = os.getenv("MONGODB_DB", "warewell")
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://127.0.0.1:27017")
+DB_NAME = os.getenv("DB_NAME", "warewell")
 
-if not MONGODB_URI:
-    raise ValueError("MONGODB_URI is not set. Add it to backend/.env")
+_client: AsyncIOMotorClient | None = None
 
-client = MongoClient(MONGODB_URI)
-db = client[DB_NAME]
 
-def get_db():
-    return db
+def get_client() -> AsyncIOMotorClient:
+    global _client
+    if _client is None:
+        _client = AsyncIOMotorClient(MONGODB_URI)
+    return _client
+
+
+def get_database():
+    client = get_client()
+    return client[DB_NAME]
