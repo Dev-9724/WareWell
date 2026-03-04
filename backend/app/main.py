@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.api.wardrobe import router as wardrobe_router
+from app.api.weather import router as weather_router
 
 app = FastAPI(
     title="WareWell API",
@@ -7,6 +8,7 @@ app = FastAPI(
 )
 
 app.include_router(wardrobe_router)
+app.include_router(weather_router)
 
 @app.get("/")
 def root():
