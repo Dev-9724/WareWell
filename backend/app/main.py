@@ -2,15 +2,17 @@ from fastapi import FastAPI
 from app.api.wardrobe import router as wardrobe_router
 from app.api.weather import router as weather_router
 from app.api.recommendation import router as recommendation_router
+from app.routes.evaluation_routes import router as evaluation_router
+from app.api.feedback import router as feedback_router
 
-app = FastAPI(
-    title="WareWell API",
-    version="0.1.0"
-)
+
+app = FastAPI()
 
 app.include_router(wardrobe_router)
 app.include_router(weather_router)
 app.include_router(recommendation_router)
+app.include_router(evaluation_router)
+app.include_router(feedback_router)
 
 @app.get("/")
 def root():

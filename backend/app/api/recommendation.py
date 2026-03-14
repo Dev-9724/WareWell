@@ -13,31 +13,68 @@ from app.services.explanation_engine import generate_explanations_for_ranked_out
 router = APIRouter(prefix="/recommend", tags=["Recommendation"])
 
 
-@router.post("/filter")
-async def filter_wardrobe_items(user_id: str = Query(..., min_length=1)):
-    db = get_database()
+async def get_active_weights(db):
+    """
+    Load current learned weights from MongoDB.
+    If none exist yet, use default weights.
+    """
+    weights_col = db["model_weights"]
+    weights_doc = await weights_col.find_one({"model_name": "hybrid_recommender"})
 
+    if weights_doc and "weights" in weights_doc:
+        return weights_doc["weights"]
+
+    return DEFAULT_WEIGHTS
+
+
+async def get_user_wardrobe_items(db, user_id: str):
+    """
+    Load wardrobe items for the selected user.
+    """
     wardrobe_col = db["wardrobe_items"]
-    weather_col = db["context_snapshots"]
 
     items = []
     cursor = wardrobe_col.find({"user_id": user_id})
     async for doc in cursor:
         items.append(doc)
 
+    return items
+
+
+async def get_latest_weather_snapshot(db):
+    """
+    Load the latest weather snapshot from MongoDB.
+    """
+    weather_col = db["context_snapshots"]
+    latest_weather = await weather_col.find_one({}, sort=[("timestamp", -1)])
+    return latest_weather
+
+
+@router.post("/filter")
+async def filter_wardrobe_items(user_id: str = Query(..., min_length=1)):
+    """
+    Phase 5:
+    Apply hard constraints to wardrobe items using latest weather snapshot.
+    """
+    db = get_database()
+
+    items = await get_user_wardrobe_items(db, user_id)
     if not items:
         raise HTTPException(status_code=404, detail="No wardrobe items found for this user")
 
-    latest_weather = await weather_col.find_one({}, sort=[("timestamp", -1)])
+    latest_weather = await get_latest_weather_snapshot(db)
     if not latest_weather:
-        raise HTTPException(status_code=404, detail="No weather snapshot found. Please call /weather/current first.")
+        raise HTTPException(
+            status_code=404,
+            detail="No weather snapshot found. Please call /weather/current first."
+        )
 
     try:
-        result = apply_constraints(items, latest_weather)
+        filtered_result = apply_constraints(items, latest_weather)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    return result
+    return filtered_result
 
 
 @router.post("/outfits")
@@ -45,22 +82,22 @@ async def generate_recommended_outfits(
     user_id: str = Query(..., min_length=1),
     max_outfits: int = Query(20, ge=1, le=100),
 ):
+    """
+    Phase 6:
+    Generate outfit combinations after constraint filtering.
+    """
     db = get_database()
 
-    wardrobe_col = db["wardrobe_items"]
-    weather_col = db["context_snapshots"]
-
-    items = []
-    cursor = wardrobe_col.find({"user_id": user_id})
-    async for doc in cursor:
-        items.append(doc)
-
+    items = await get_user_wardrobe_items(db, user_id)
     if not items:
         raise HTTPException(status_code=404, detail="No wardrobe items found for this user")
 
-    latest_weather = await weather_col.find_one({}, sort=[("timestamp", -1)])
+    latest_weather = await get_latest_weather_snapshot(db)
     if not latest_weather:
-        raise HTTPException(status_code=404, detail="No weather snapshot found. Please call /weather/current first.")
+        raise HTTPException(
+            status_code=404,
+            detail="No weather snapshot found. Please call /weather/current first."
+        )
 
     try:
         filtered_result = apply_constraints(items, latest_weather)
@@ -70,8 +107,8 @@ async def generate_recommended_outfits(
     valid_items = filtered_result["valid_items"]
     outfit_result = generate_outfits(valid_items)
 
+    # limit outfits for practicality
     limited_outfits = outfit_result["outfits"][:max_outfits]
-
     outfit_result["outfits"] = limited_outfits
     outfit_result["outfit_count"] = len(limited_outfits)
 
@@ -93,22 +130,22 @@ async def generate_ranked_outfits(
     max_outfits: int = Query(20, ge=1, le=100),
     top_k: int = Query(5, ge=1, le=20),
 ):
+    """
+    Phase 7 + Phase 9:
+    Full recommendation pipeline with learned weights.
+    """
     db = get_database()
 
-    wardrobe_col = db["wardrobe_items"]
-    weather_col = db["context_snapshots"]
-
-    items = []
-    cursor = wardrobe_col.find({"user_id": user_id})
-    async for doc in cursor:
-        items.append(doc)
-
+    items = await get_user_wardrobe_items(db, user_id)
     if not items:
         raise HTTPException(status_code=404, detail="No wardrobe items found for this user")
 
-    latest_weather = await weather_col.find_one({}, sort=[("timestamp", -1)])
+    latest_weather = await get_latest_weather_snapshot(db)
     if not latest_weather:
-        raise HTTPException(status_code=404, detail="No weather snapshot found. Please call /weather/current first.")
+        raise HTTPException(
+            status_code=404,
+            detail="No weather snapshot found. Please call /weather/current first."
+        )
 
     try:
         filtered_result = apply_constraints(items, latest_weather)
@@ -136,19 +173,21 @@ async def generate_ranked_outfits(
     else:
         resolved_target_formality = target_formality
 
+    active_weights = await get_active_weights(db)
+
     ranked = rank_outfits(
         outfits=generated_outfits,
         weather=filtered_result["weather_used"],
         top_k=top_k,
         target_formality=resolved_target_formality,
-        weights=DEFAULT_WEIGHTS,
+        weights=active_weights,
     )
 
     return {
         "weather_used": filtered_result["weather_used"],
         "occasion_used": occasion,
         "target_formality_used": resolved_target_formality,
-        "weights_used": DEFAULT_WEIGHTS,
+        "weights_used": active_weights,
         "valid_item_count": filtered_result["valid_count"],
         "rejected_item_count": filtered_result["rejected_count"],
         "rejected_items": filtered_result["rejected_items"],
@@ -170,25 +209,21 @@ async def generate_outfit_explanations(
     top_k: int = Query(5, ge=1, le=20),
 ):
     """
-    Full pipeline with explanations:
-    wardrobe -> constraints -> outfits -> scoring -> ranking -> explanations
+    Phase 8 + Phase 9:
+    Full recommendation pipeline with explanations and learned weights.
     """
     db = get_database()
 
-    wardrobe_col = db["wardrobe_items"]
-    weather_col = db["context_snapshots"]
-
-    items = []
-    cursor = wardrobe_col.find({"user_id": user_id})
-    async for doc in cursor:
-        items.append(doc)
-
+    items = await get_user_wardrobe_items(db, user_id)
     if not items:
         raise HTTPException(status_code=404, detail="No wardrobe items found for this user")
 
-    latest_weather = await weather_col.find_one({}, sort=[("timestamp", -1)])
+    latest_weather = await get_latest_weather_snapshot(db)
     if not latest_weather:
-        raise HTTPException(status_code=404, detail="No weather snapshot found. Please call /weather/current first.")
+        raise HTTPException(
+            status_code=404,
+            detail="No weather snapshot found. Please call /weather/current first."
+        )
 
     try:
         filtered_result = apply_constraints(items, latest_weather)
@@ -216,12 +251,14 @@ async def generate_outfit_explanations(
     else:
         resolved_target_formality = target_formality
 
+    active_weights = await get_active_weights(db)
+
     ranked = rank_outfits(
         outfits=generated_outfits,
         weather=filtered_result["weather_used"],
         top_k=top_k,
         target_formality=resolved_target_formality,
-        weights=DEFAULT_WEIGHTS,
+        weights=active_weights,
     )
 
     explained = generate_explanations_for_ranked_outfits(
@@ -235,7 +272,7 @@ async def generate_outfit_explanations(
         "weather_used": filtered_result["weather_used"],
         "occasion_used": occasion,
         "target_formality_used": resolved_target_formality,
-        "weights_used": DEFAULT_WEIGHTS,
+        "weights_used": active_weights,
         "valid_item_count": filtered_result["valid_count"],
         "rejected_item_count": filtered_result["rejected_count"],
         "rejected_items": filtered_result["rejected_items"],
