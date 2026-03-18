@@ -4,9 +4,19 @@ from app.api.weather import router as weather_router
 from app.api.recommendation import router as recommendation_router
 from app.routes.evaluation_routes import router as evaluation_router
 from app.api.feedback import router as feedback_router
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+
+# middleware cors to allow requests from the frontend (running on localhost:5173)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(wardrobe_router)
 app.include_router(weather_router)
