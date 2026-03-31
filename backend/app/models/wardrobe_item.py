@@ -4,30 +4,27 @@ from pydantic import BaseModel, Field
 
 
 class WardrobeItemCreate(BaseModel):
-    # Core identity
-    user_id: str = Field(..., min_length=1, examples=["dev_mdx_user"])
+    user_id: str = Field(..., min_length=1, examples=["65f4f7f96588c6c3f3e3a123"])
+    name: str = Field(..., min_length=1, examples=["Red Hoodie"])
+    category: str = Field(..., examples=["Top"])
+    occasion: Optional[str] = Field(None, examples=["Casual"])
 
-    # Clothing attributes
-    category: str = Field(..., examples=["top"])  # top, bottom, shoes, outerwear, accessory
-    colour_primary: str = Field(..., examples=["black"])
-    colour_secondary: Optional[str] = Field(None, examples=["white"])
+    colour_primary: str = Field(..., examples=["Red"])
+    colour_secondary: Optional[str] = Field(None, examples=["White"])
 
-    # Context fit
-    formality_level: int = Field(..., ge=0, le=10, examples=[5])
-    season: List[str] = Field(default_factory=list, examples=[["spring", "summer"]])
+    formality_level: int = Field(5, ge=0, le=10, examples=[5])
+    season: List[str] = Field(default_factory=list, examples=[["Spring", "Autumn"]])
 
-    temperature_min: float = Field(..., examples=[10])
-    temperature_max: float = Field(..., examples=[25])
+    temperature_min: float = Field(0, examples=[0])
+    temperature_max: float = Field(40, examples=[40])
 
-    rain_suitable: bool = Field(..., examples=[True])
+    rain_suitable: bool = Field(False, examples=[True])
 
-    # Usage tracking
     wear_count: int = Field(0, ge=0, examples=[0])
     last_worn_date: Optional[date] = Field(None, examples=["2026-03-01"])
 
-    # Optional sustainability / extra info
-    cost: Optional[float] = Field(None, ge=0, examples=[49.99])
-    image_url: Optional[str] = Field(None, examples=["https://example.com/jacket.png"])
+    cost: Optional[float] = Field(0, ge=0, examples=[49.99])
+    image_url: Optional[str] = Field(None, examples=["/uploads/jacket.png"])
 
 
 class WardrobeItemOut(WardrobeItemCreate):

@@ -1,0 +1,10 @@
+<!-- To run backend files -->
+
+<!-- To activiate the .venv for app.  
+.venv\Scripts\activate -->
+
+<!-- To activiate the run port 8000
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 -->
+
+<!-- To run Frontend files -->
+<!-- npm run dev -->

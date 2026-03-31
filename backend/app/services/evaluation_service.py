@@ -15,7 +15,6 @@ def evaluate_models(
     target_formality,
     weights,
 ):
-
     random_results = random_baseline(outfits, top_k)
 
     rule_results = rule_only_baseline(outfits, top_k)

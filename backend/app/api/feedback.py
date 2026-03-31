@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, status
 
 from app.db.mongo import get_database
 from app.models.feedback_models import FeedbackCreate, FeedbackOut
@@ -15,6 +15,7 @@ def to_out(doc: dict) -> FeedbackOut:
         outfit_id=doc["outfit_id"],
         rating=doc["rating"],
         occasion=doc.get("occasion"),
+        comment=doc.get("comment"),
         timestamp=doc["timestamp"],
         weights_before=doc["weights_before"],
         weights_after=doc["weights_after"],
@@ -28,7 +29,6 @@ async def submit_feedback(payload: FeedbackCreate):
     feedback_col = db["feedback_logs"]
     weights_col = db["model_weights"]
 
-    # get current weights
     weights_doc = await weights_col.find_one({"model_name": "hybrid_recommender"})
     if not weights_doc:
         weights_before = DEFAULT_WEIGHTS.copy()
@@ -40,10 +40,8 @@ async def submit_feedback(payload: FeedbackCreate):
     else:
         weights_before = weights_doc.get("weights", DEFAULT_WEIGHTS.copy())
 
-    # adapt weights
     weights_after = adapt_weights(weights_before, payload.rating)
 
-    # update stored weights
     await weights_col.update_one(
         {"model_name": "hybrid_recommender"},
         {
@@ -55,12 +53,12 @@ async def submit_feedback(payload: FeedbackCreate):
         upsert=True,
     )
 
-    # store feedback log
     doc = {
         "user_id": payload.user_id,
         "outfit_id": payload.outfit_id,
         "rating": payload.rating,
         "occasion": payload.occasion,
+        "comment": payload.comment,
         "timestamp": datetime.now(timezone.utc),
         "weights_before": weights_before,
         "weights_after": weights_after,
@@ -107,6 +105,7 @@ async def list_feedback_logs():
             "outfit_id": doc["outfit_id"],
             "rating": doc["rating"],
             "occasion": doc.get("occasion"),
+            "comment": doc.get("comment"),
             "timestamp": doc["timestamp"],
             "weights_before": doc["weights_before"],
             "weights_after": doc["weights_after"],

@@ -3,10 +3,6 @@ from datetime import datetime
 
 
 def get_season_from_month(month: int) -> str:
-    """
-    Simple season mapping.
-    You can adjust later if needed.
-    """
     if month in [12, 1, 2]:
         return "winter"
     elif month in [3, 4, 5]:
@@ -24,10 +20,12 @@ def check_temperature(item: dict, temperature: float) -> tuple[bool, str | None]
     if item_min is None or item_max is None:
         return False, "missing_temperature_range"
 
-    if temperature < item_min:
+    TEMP_BUFFER = 3.0
+
+    if temperature < (item_min - TEMP_BUFFER):
         return False, "too_cold_for_item"
 
-    if temperature > item_max:
+    if temperature > (item_max + TEMP_BUFFER):
         return False, "too_hot_for_item"
 
     return True, None
@@ -48,6 +46,9 @@ def check_season(item: dict, current_season: str) -> tuple[bool, str | None]:
     if not seasons:
         return False, "missing_season_data"
 
+    if isinstance(seasons, str):
+        seasons = [seasons]
+
     normalized_seasons = [str(s).strip().lower() for s in seasons]
 
     if current_season.lower() not in normalized_seasons:
@@ -57,10 +58,6 @@ def check_season(item: dict, current_season: str) -> tuple[bool, str | None]:
 
 
 def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, Any]:
-    """
-    Apply hard filtering rules to wardrobe items.
-    Returns valid + rejected items with reasons.
-    """
     temperature = weather_snapshot.get("temperature")
     rain = weather_snapshot.get("rain", 0.0)
     timestamp = weather_snapshot.get("timestamp")
