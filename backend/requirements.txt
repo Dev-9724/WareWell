@@ -8,3 +8,4 @@ passlib[bcrypt]
 bcrypt
 email-validator
 requests
+python-multipart
