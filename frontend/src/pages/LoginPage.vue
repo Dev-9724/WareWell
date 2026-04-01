@@ -4,11 +4,11 @@
       <p class="eyebrow">Welcome back</p>
       <h1>Login</h1>
 
-      <label>Email</label>
-      <input v-model="form.email" type="email" required />
+      <label for="email">Email</label>
+      <input id="email" v-model.trim="form.email" type="email" required />
 
-      <label>Password</label>
-      <input v-model="form.password" type="password" required />
+      <label for="password">Password</label>
+      <input id="password" v-model="form.password" type="password" required />
 
       <p v-if="error" class="error-text">{{ error }}</p>
 
@@ -46,12 +46,19 @@ async function handleLogin() {
   error.value = ''
 
   try {
-    const result = await loginUser(form)
+    const result = await loginUser({
+      email: form.email,
+      password: form.password,
+    })
+
     setUser(result.user)
     router.push('/wardrobe')
   } catch (err) {
-    console.error(err)
-    error.value = 'Login failed. Please check your email and password.'
+    console.error('Login error:', err)
+
+    error.value =
+      err?.message ||
+      'Login failed. Please check your email and password.'
   } finally {
     loading.value = false
   }
@@ -104,6 +111,10 @@ input {
   border-radius: 12px;
   font-weight: 700;
   cursor: pointer;
+}
+.primary-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 .error-text {
   color: #b42318;
