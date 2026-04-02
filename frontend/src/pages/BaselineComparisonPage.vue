@@ -181,7 +181,7 @@
         <div class="card-header">
           <div>
             <p class="section-label">Improvement Over Baselines</p>
-            <h2>Hybrid model gains</h2>
+            <h2>Hybrid constraint-ranking gains</h2>
           </div>
         </div>
 
@@ -238,7 +238,7 @@ const selectedModel = ref('hybrid')
 const tabs = [
   { key: 'random', label: 'Random Selection' },
   { key: 'rule', label: 'Rule-Based Only' },
-  { key: 'hybrid', label: 'Hybrid AI (Ours)' },
+  { key: 'hybrid', label: 'Hybrid Constraint-Ranking' },
 ]
 
 const emptyMetrics = {
@@ -277,7 +277,7 @@ const modelMap = computed(() => ({
   },
   hybrid: {
     key: 'hybrid',
-    label: 'Hybrid AI (Ours)',
+    label: 'Hybrid Constraint-Ranking',
     shortLabel: 'Hybrid',
     description: 'Multi-factor optimisation using constraints and ranking together.',
     metrics: hybridData.value.metrics || emptyMetrics,

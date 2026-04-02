@@ -67,8 +67,6 @@
             <p class="featured-label">Top Recommendation</p>
             <h2>Your Recommended Outfit</h2>
           </div>
-
-          <div class="score-pill">Score: {{ formatScore(selectedOutfitScore) }}</div>
         </div>
 
         <div class="outfit-grid">
@@ -91,7 +89,7 @@
         <div class="explanation-card">
           <div class="explanation-head">
             <h3>Why this outfit?</h3>
-            <router-link class="details-link" to="/explanations"> AI Details </router-link>
+            <router-link class="details-link" to="/explanations"> Scoring Details </router-link>
           </div>
 
           <div class="reason-list">
@@ -148,7 +146,7 @@
         </div>
 
         <div class="all-outfits-card">
-          <h3>Other Ranked Outfits</h3>
+          <h3>Other Outfits</h3>
 
           <button
             v-for="(outfit, index) in normalizedOutfits"
@@ -161,7 +159,7 @@
               <strong>Outfit {{ index + 1 }}</strong>
               <p>{{ getCompactSummary(outfit) }}</p>
             </div>
-            <span>{{ formatScore(outfit.score) }}</span>
+            <!-- <span>{{ formatScore(outfit.score) }}</span> -->
           </button>
         </div>
       </aside>

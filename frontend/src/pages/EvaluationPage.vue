@@ -5,7 +5,7 @@
         <p class="eyebrow">Evaluation Dashboard</p>
         <h1>System Performance Overview</h1>
         <p class="subtitle">
-          Compare random baseline, rule-only baseline, and the hybrid recommender using quantitative
+          Compare random baseline, rule-only baseline, and the hybrid recommendation approach using quantitative
           evaluation metrics.
         </p>
       </div>
@@ -30,7 +30,7 @@
       <div class="controls-header">
         <div>
           <h2>Run Comparative Evaluation</h2>
-          <p>Choose an occasion and generate updated model comparison metrics.</p>
+          <p>Choose an occasion and generate updated Hybrid Constraint-Based metrics.</p>
         </div>
 
         <button class="primary-btn" :disabled="loading" @click="loadEvaluation">
@@ -75,7 +75,7 @@
           </div>
           <h3>Constraint Satisfaction</h3>
           <strong>{{ formatPercent(hybridMetrics.constraint_satisfaction_rate) }}</strong>
-          <p>Hybrid model performance for context and rule compliance.</p>
+          <p>Hybrid constraint-ranking model performance for context and rule compliance.</p>
         </article>
 
         <article class="summary-card">
@@ -219,7 +219,7 @@
           </div>
 
           <p class="analysis-note">
-            The hybrid model is presented as the primary system because it combines structured
+            The Hybrid constraint-ranking model is presented as the primary system because it combines structured
             constraint handling with ranking-based optimisation, allowing clearer comparison against
             the baseline approaches.
           </p>
@@ -230,13 +230,6 @@
         <button class="secondary-btn" type="button" @click="goToBaselineComparison">
           View Baseline Comparison
         </button>
-
-        <div class="explanation-box">
-          <p>
-            This dashboard presents evaluation metrics in a report-friendly format so you can
-            justify why the hybrid model performs better than the random and rule-only baselines.
-          </p>
-        </div>
       </section>
     </template>
   </div>
@@ -311,7 +304,7 @@ const modelRows = computed(() => {
     },
     {
       key: 'hybrid',
-      label: 'Hybrid Model',
+      label: 'Hybrid constraint-ranking model',
       subtext: 'Constraints + ranking',
       metrics: hybridMetrics.value,
     },
@@ -341,7 +334,7 @@ const bestModelKey = computed(() => {
 
 const bestModelLabel = computed(() => {
   const found = modelRows.value.find((item) => item.key === bestModelKey.value)
-  return found?.label || 'Hybrid Model'
+  return found?.label || 'Hybrid constraint-ranking model'
 })
 
 const utilisationGainVsRandom = computed(() => {

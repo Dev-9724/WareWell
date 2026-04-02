@@ -28,7 +28,7 @@
         </div>
 
         <div class="field">
-          <label>Number of Recommendations</label>
+          <label for="topK">Number of Recommendations</label>
           <input id="topK" v-model.number="topK" type="number" min="1" max="20" />
         </div>
 
@@ -52,6 +52,10 @@
 
     <section v-if="loading" class="loading-card">
       <p>Generating recommendation explanations...</p>
+    </section>
+
+    <section v-else-if="!explanations.length && !error" class="loading-card">
+      <p>No explanations available yet. Generate explanations to view outfit details.</p>
     </section>
 
     <template v-if="explanations.length">
@@ -110,7 +114,7 @@
             </div>
 
             <p class="summary-text">{{ explanation.summary }}</p>
-            <p class="context-line">{{ explanation.weather_context }}</p>
+            <p class="context-line">{{ explanation.weather_context || getWeatherContextText() }}</p>
             <p v-if="explanation.occasion_context" class="context-line">
               {{ explanation.occasion_context }}
             </p>
@@ -124,7 +128,7 @@
             <div class="item-grid">
               <div
                 v-for="(item, itemIndex) in explanation.items || []"
-                :key="item.id || itemIndex"
+                :key="item.id || item._id || itemIndex"
                 class="item-chip"
               >
                 {{ getItemDisplayName(item) }}
@@ -134,25 +138,25 @@
 
           <section class="params-card">
             <div class="card-heading">
-              <p class="section-label">Model Parameters</p>
+              <p class="section-label">System Context</p>
               <h3>Context Inputs</h3>
             </div>
 
             <div class="param-row">
-              <span>Temperature Range</span>
-              <strong>{{ explanation.model_parameters?.temperature_range || 'Not available' }}</strong>
+              <span>Temperature</span>
+              <strong>{{ getContextInputs(explanation).temperature }}</strong>
             </div>
             <div class="param-row">
               <span>Weather Condition</span>
-              <strong>{{ explanation.model_parameters?.weather_condition || 'Unknown' }}</strong>
+              <strong>{{ getContextInputs(explanation).condition }}</strong>
             </div>
             <div class="param-row">
               <span>Occasion</span>
-              <strong>{{ explanation.model_parameters?.occasion || capitalize(occasion) }}</strong>
+              <strong>{{ getContextInputs(explanation).occasion }}</strong>
             </div>
             <div class="param-row">
               <span>Season</span>
-              <strong>{{ explanation.model_parameters?.season || 'Not specified' }}</strong>
+              <strong>{{ getContextInputs(explanation).season }}</strong>
             </div>
           </section>
 
@@ -163,7 +167,7 @@
 
             <ul class="confidence-list">
               <li
-                v-for="(item, confidenceIndex) in explanation.confidence_indicators || []"
+                v-for="(item, confidenceIndex) in getConfidenceIndicators(explanation)"
                 :key="confidenceIndex"
               >
                 <span class="tick">✓</span>
@@ -174,8 +178,8 @@
 
           <section class="note-card">
             <p>
-              This recommendation explanation presents score contributions, contextual
-              reasoning, and confidence indicators to support transparent outfit selection.
+              This explanation shows how constraint filtering, contextual suitability,
+              and multi-criteria scoring contributed to the final outfit selection.
             </p>
           </section>
         </div>
@@ -194,17 +198,44 @@ const maxOutfits = ref(20)
 const loading = ref(false)
 const error = ref('')
 const explanations = ref([])
+const weatherUsed = ref({})
+const occasionUsed = ref('')
+const targetFormalityUsed = ref(null)
 
 function capitalize(value) {
   if (!value) return ''
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
+function toDisplayText(value, fallback) {
+  if (value === null || value === undefined || value === '') return fallback
+  return String(value)
+}
+
+function formatTemperature(value) {
+  const numericValue = Number(value)
+  if (Number.isFinite(numericValue)) {
+    return `${Math.round(numericValue)}°C`
+  }
+  return 'Not available'
+}
+
+function getSeasonFromDate() {
+  const month = new Date().getMonth() + 1
+
+  if ([12, 1, 2].includes(month)) return 'Winter'
+  if ([3, 4, 5].includes(month)) return 'Spring'
+  if ([6, 7, 8].includes(month)) return 'Summer'
+  return 'Autumn'
+}
+
 function getScorePercent(explanation) {
   if (typeof explanation?.score_percentage === 'number') {
     return Math.round(explanation.score_percentage)
   }
-  return Math.round((Number(explanation?.score || 0)) * 100)
+
+  const numericScore = Number(explanation?.score || 0)
+  return Math.round(numericScore * 100)
 }
 
 function getRecommendationLabel(percent) {
@@ -217,13 +248,18 @@ function getRecommendationLabel(percent) {
 }
 
 function getItemDisplayName(item) {
-  if (!item) return 'Wardrobe Item'
+  if (!item) return 'Wardrobe item'
 
   const parts = []
-  if (item.colour_primary) parts.push(item.colour_primary)
-  if (item.category) parts.push(item.category)
+  if (item.colour_primary) parts.push(capitalize(item.colour_primary))
+  if (item.category) parts.push(capitalize(item.category))
+  if (item.subcategory) parts.push(`(${capitalize(item.subcategory)})`)
 
-  return parts.length ? parts.join(' ') : item.name || 'Wardrobe Item'
+  if (parts.length) {
+    return parts.join(' ')
+  }
+
+  return item.name || item.title || 'Wardrobe item'
 }
 
 function getIcon(key) {
@@ -271,6 +307,76 @@ function getBreakdownCards(explanation) {
   })
 }
 
+function getContextInputs(explanation) {
+  const legacyParams = explanation?.model_parameters || {}
+
+  return {
+    temperature:
+      legacyParams.temperature_range ||
+      formatTemperature(weatherUsed.value?.temperature),
+    condition:
+      legacyParams.weather_condition ||
+      toDisplayText(weatherUsed.value?.condition, 'Unknown'),
+    occasion:
+      legacyParams.occasion ||
+      capitalize(occasionUsed.value || occasion.value) ||
+      'Not specified',
+    season:
+      legacyParams.season ||
+      toDisplayText(weatherUsed.value?.season, getSeasonFromDate()),
+  }
+}
+
+function getWeatherContextText() {
+  const city = toDisplayText(weatherUsed.value?.city, 'the selected city')
+  const temperature = formatTemperature(weatherUsed.value?.temperature)
+  const condition = toDisplayText(weatherUsed.value?.condition, 'unknown')
+
+  return `The recommendation was generated for ${city} with temperature ${temperature} and condition ${condition}.`
+}
+
+function getConfidenceIndicators(explanation) {
+  if (
+    Array.isArray(explanation?.confidence_indicators) &&
+    explanation.confidence_indicators.length
+  ) {
+    return explanation.confidence_indicators
+  }
+
+  const indicators = []
+  const scorePercent = getScorePercent(explanation)
+  const itemCount = Array.isArray(explanation?.items) ? explanation.items.length : 0
+  const categoryText = explanation?.categories_used || 'selected categories'
+  const condition = toDisplayText(weatherUsed.value?.condition, 'current weather conditions')
+  const season = toDisplayText(weatherUsed.value?.season, getSeasonFromDate())
+  const selectedOccasion = capitalize(occasionUsed.value || occasion.value) || 'selected occasion'
+
+  indicators.push(`Overall match score: ${scorePercent}% based on multi-criteria ranking.`)
+
+  if (itemCount > 0) {
+    indicators.push(
+      `This outfit includes ${itemCount} selected item${itemCount > 1 ? 's' : ''} that passed active constraints.`
+    )
+  } else {
+    indicators.push('All selected items passed the active clothing constraints.')
+  }
+
+  indicators.push(
+    `The recommendation remains suitable for ${condition.toLowerCase()} conditions in ${season.toLowerCase()}.`
+  )
+  indicators.push(
+    `The outfit structure uses ${categoryText} to support a ${selectedOccasion.toLowerCase()} recommendation.`
+  )
+
+  if (targetFormalityUsed.value !== null && targetFormalityUsed.value !== undefined) {
+    indicators.push(
+      `Target formality ${Number(targetFormalityUsed.value).toFixed(1)} was applied during ranking.`
+    )
+  }
+
+  return indicators
+}
+
 async function loadExplanations() {
   loading.value = true
   error.value = ''
@@ -278,6 +384,10 @@ async function loadExplanations() {
   try {
     const response = await getExplanations(occasion.value, topK.value, maxOutfits.value)
     console.log('Explanation API response:', response)
+
+    weatherUsed.value = response?.weather_used || {}
+    occasionUsed.value = response?.occasion_used || occasion.value
+    targetFormalityUsed.value = response?.target_formality_used ?? null
 
     if (Array.isArray(response)) {
       explanations.value = response
@@ -287,12 +397,15 @@ async function loadExplanations() {
       explanations.value = response.explanations
     } else {
       explanations.value = []
-      error.value = 'No explained outfits were returned by the API.'
+      error.value = response?.message || 'No explained outfits were returned by the API.'
     }
   } catch (err) {
     console.error(err)
     error.value = err?.message || 'Failed to generate explanations.'
     explanations.value = []
+    weatherUsed.value = {}
+    occasionUsed.value = occasion.value
+    targetFormalityUsed.value = null
   } finally {
     loading.value = false
   }
@@ -312,7 +425,6 @@ onMounted(() => {
 .controls-card,
 .error-card,
 .loading-card,
-.score-hero,
 .breakdown-card,
 .summary-card,
 .items-card,
@@ -320,9 +432,9 @@ onMounted(() => {
 .confidence-card,
 .note-card {
   background: #ffffff;
-  border: 1px solid #e8edf5;
+  border: 1px solid #e7edf5;
   border-radius: 24px;
-  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.06);
+  box-shadow: none;
 }
 
 .controls-card,
@@ -349,13 +461,13 @@ onMounted(() => {
   margin: 0 0 8px;
   font-size: 0.82rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #64748b;
 }
 
 .section-label.light {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .controls-header h1 {
@@ -386,7 +498,7 @@ onMounted(() => {
 
 .field label {
   font-weight: 700;
-  color: #1e293b;
+  color: #0f172a;
 }
 
 .field input,
@@ -407,141 +519,153 @@ onMounted(() => {
   font-weight: 800;
   font-size: 0.96rem;
   cursor: pointer;
-  background: #0f172a;
+  background: #0b1730;
   color: #ffffff;
-  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
 }
 
 .primary-btn:disabled {
-  opacity: 0.7;
   cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.error-card h3 {
+  margin: 0 0 8px;
+  color: #b91c1c;
 }
 
 .explanation-layout {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 22px;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(340px, 1.05fr);
+  gap: 24px;
   align-items: start;
 }
 
 .left-column,
 .right-column {
   display: grid;
-  gap: 20px;
+  gap: 24px;
 }
 
 .score-hero {
-  padding: 28px;
-  background: linear-gradient(135deg, #41a646 0%, #4fb24d 100%);
-  color: #ffffff;
   display: flex;
   align-items: center;
   gap: 18px;
+  padding: 28px;
+  border-radius: 24px;
+  background: #4caf45;
+  color: #ffffff;
+  border: 1px solid #45a53f;
 }
 
 .score-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 18px;
+  width: 68px;
+  height: 68px;
   display: grid;
   place-items: center;
+  border-radius: 20px;
   background: rgba(255, 255, 255, 0.14);
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.8rem;
 }
 
 .score-hero h2 {
   margin: 0;
-  font-size: clamp(3rem, 6vw, 4.6rem);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
   line-height: 1;
 }
 
 .score-hero p:last-child {
   margin: 10px 0 0;
-  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .breakdown-card h3,
-.card-heading h3 {
-  margin: 0 0 18px;
+.summary-card h3,
+.params-card h3 {
+  margin: 0;
   color: #0f172a;
-  font-size: 1.5rem;
 }
 
-.breakdown-row + .breakdown-row {
-  margin-top: 18px;
+.breakdown-card {
+  display: grid;
+  gap: 18px;
+}
+
+.breakdown-row {
+  display: grid;
+  gap: 12px;
 }
 
 .breakdown-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 10px;
+  gap: 16px;
 }
 
 .breakdown-title-wrap {
   display: flex;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .breakdown-title-wrap h4 {
-  margin: 0 0 6px;
-  font-size: 1.2rem;
+  margin: 0 0 4px;
   color: #0f172a;
 }
 
 .breakdown-title-wrap p {
   margin: 0;
   color: #64748b;
-  line-height: 1.6;
+  line-height: 1.55;
+  font-size: 0.95rem;
 }
 
 .breakdown-header strong {
-  font-size: 1.2rem;
-  color: #41a646;
+  color: #16a34a;
+  font-weight: 800;
 }
 
 .breakdown-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  font-weight: 800;
+  border-radius: 50%;
+  font-size: 1rem;
   flex-shrink: 0;
 }
 
 .breakdown-icon--weather_fit {
-  background: #edf7ed;
-  color: #41a646;
+  background: #e7f7ea;
+  color: #39a94b;
 }
 
 .breakdown-icon--formality_match {
-  background: #fff5e9;
-  color: #f1aa3c;
+  background: #fdf1df;
+  color: #eea42b;
 }
 
 .breakdown-icon--colour_harmony {
-  background: #eef5ff;
-  color: #4d8dde;
+  background: #e8f0fd;
+  color: #4f89dd;
 }
 
 .breakdown-icon--usage_balance {
-  background: #f3f4f6;
+  background: #efe8ff;
   color: #7c3aed;
 }
 
 .breakdown-icon--comfort {
-  background: #f4f1ff;
+  background: #f3e7e2;
   color: #8b5e57;
 }
 
 .bar-track {
   width: 100%;
-  height: 12px;
-  background: #edf2f7;
+  height: 10px;
   border-radius: 999px;
+  background: #edf2f7;
   overflow: hidden;
 }
 
@@ -551,15 +675,15 @@ onMounted(() => {
 }
 
 .bar-fill--weather_fit {
-  background: #41a646;
+  background: #39a94b;
 }
 
 .bar-fill--formality_match {
-  background: #f1aa3c;
+  background: #eea42b;
 }
 
 .bar-fill--colour_harmony {
-  background: #4d8dde;
+  background: #4f89dd;
 }
 
 .bar-fill--usage_balance {
@@ -570,31 +694,36 @@ onMounted(() => {
   background: #8b5e57;
 }
 
+.card-heading {
+  margin-bottom: 16px;
+}
+
 .summary-text {
   margin: 0 0 14px;
   color: #0f172a;
-  font-size: 1.08rem;
-  line-height: 1.8;
+  line-height: 1.7;
+  font-size: 1rem;
 }
 
 .context-line {
-  margin: 0 0 8px;
+  margin: 10px 0 0;
   color: #64748b;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .item-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
 .item-chip {
-  padding: 16px 14px;
-  background: #f8fafc;
-  border: 1px solid #e7eef6;
-  border-radius: 18px;
+  min-width: 160px;
   text-align: center;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #dbe3ef;
   color: #0f172a;
   font-weight: 700;
 }
@@ -604,12 +733,13 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid #edf2f7;
+  padding: 12px 0;
+  border-bottom: 1px solid #eef2f7;
 }
 
 .param-row:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
 
 .param-row span {
@@ -618,92 +748,88 @@ onMounted(() => {
 
 .param-row strong {
   color: #0f172a;
+  text-align: right;
+}
+
+.confidence-card {
+  min-height: 110px;
 }
 
 .confidence-list {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .confidence-list li {
   display: flex;
-  gap: 12px;
   align-items: flex-start;
+  gap: 10px;
   color: #0f172a;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .tick {
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: #edf7ed;
-  color: #41a646;
+  color: #16a34a;
   font-weight: 800;
-  flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .note-card {
-  background: #4d8dde;
-  color: #ffffff;
+  background: #4f89dd;
+  border-color: #4f89dd;
 }
 
 .note-card p {
   margin: 0;
-  font-size: 1.02rem;
+  color: #ffffff;
   line-height: 1.8;
 }
 
-.error-card {
-  background: #fff4f4;
-  border-color: #ffd6d6;
-}
-
-.error-card h3 {
-  margin: 0 0 8px;
-  color: #991b1b;
-}
-
-.loading-card {
-  text-align: center;
-}
-
-@media (max-width: 1100px) {
+@media (max-width: 980px) {
   .explanation-layout {
     grid-template-columns: 1fr;
   }
-}
 
-@media (max-width: 780px) {
-  .controls-grid,
-  .item-grid {
+  .controls-grid {
     grid-template-columns: 1fr;
   }
 
   .controls-header {
     flex-direction: column;
   }
+}
 
+@media (max-width: 640px) {
   .controls-card,
   .error-card,
   .loading-card,
-  .score-hero,
   .breakdown-card,
   .summary-card,
   .items-card,
   .params-card,
   .confidence-card,
   .note-card {
-    padding: 20px;
+    padding: 18px;
   }
 
-  .breakdown-header {
+  .score-hero {
+    padding: 22px;
+  }
+
+  .param-row {
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .param-row strong {
+    text-align: left;
+  }
+
+  .item-chip {
+    min-width: 100%;
   }
 }
 </style>

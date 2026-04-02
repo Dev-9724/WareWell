@@ -5,22 +5,18 @@
         <p class="eyebrow">Welcome to WareWell</p>
         <h1>Hello, {{ currentUser?.username || 'User' }}</h1>
         <p class="subtitle">
-          Manage your wardrobe, generate outfit recommendations, compare evaluation
-          results, and explore explanation details from one central dashboard.
+          Manage your wardrobe, generate outfit recommendations, compare evaluation results, and
+          explore explanation details from one central dashboard.
         </p>
 
         <div class="hero-actions">
-          <router-link to="/recommendations" class="primary-btn">
-            Generate Outfit
-          </router-link>
-          <router-link to="/wardrobe" class="secondary-btn">
-            Open Wardrobe
-          </router-link>
+          <router-link to="/recommendations" class="primary-btn"> Generate Outfit </router-link>
+          <router-link to="/wardrobe" class="secondary-btn"> Open Wardrobe </router-link>
         </div>
       </div>
 
       <div class="hero-side">
-        <div class="hero-badge">Explainable Hybrid System</div>
+        <div class="hero-badge">Explainable Hybrid Recommendation System</div>
 
         <div class="mini-stats">
           <div class="mini-stat">
@@ -114,9 +110,9 @@
         </div>
 
         <div class="helper-box">
-          The dashboard summarises the full recommendation workflow: context is collected
-          first, infeasible outfits are removed, compatible combinations are checked,
-          remaining outfits are scored, and the best result is returned with explanation.
+          The dashboard summarises the full recommendation workflow: context is collected first,
+          infeasible outfits are removed, compatible combinations are checked, remaining outfits are
+          scored, and the best result is returned with explanation.
         </div>
       </div>
 
@@ -148,14 +144,6 @@
             <div>
               <h3>Supports sustainability</h3>
               <p>Encourages better wardrobe use instead of more shopping.</p>
-            </div>
-          </div>
-
-          <div class="feature-item">
-            <div class="feature-icon">✓</div>
-            <div>
-              <h3>Academic evaluation ready</h3>
-              <p>Lets you compare baseline and hybrid recommendation performance.</p>
             </div>
           </div>
         </div>
@@ -191,8 +179,8 @@
       <div class="dashboard-card tip-card">
         <h3>Quick Tip</h3>
         <p>
-          Add a few tops, bottoms, shoes, and outerwear items first to get stronger
-          outfit recommendations.
+          Add a few tops, bottoms, shoes, and outerwear items first to get stronger outfit
+          recommendations.
         </p>
       </div>
     </section>
@@ -324,7 +312,9 @@ const { currentUser } = useAuth()
   padding: 12px 16px;
   border-radius: 12px;
   font-weight: 700;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .primary-btn {
@@ -544,7 +534,9 @@ const { currentUser } = useAuth()
   text-decoration: none;
   color: inherit;
   padding: 22px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .dashboard-card:hover {
@@ -597,7 +589,9 @@ const { currentUser } = useAuth()
 
 .action-tile {
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .action-tile:hover {
