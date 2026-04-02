@@ -96,6 +96,7 @@ def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, An
         if reasons:
             rejected_items.append({
                 "id": str(item.get("_id")),
+                "name": item.get("name"),
                 "category": item.get("category"),
                 "colour_primary": item.get("colour_primary"),
                 "reasons": reasons
@@ -104,6 +105,7 @@ def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, An
             valid_items.append({
                 "id": str(item.get("_id")),
                 "user_id": item.get("user_id"),
+                "name": item.get("name"),
                 "category": item.get("category"),
                 "colour_primary": item.get("colour_primary"),
                 "colour_secondary": item.get("colour_secondary"),
