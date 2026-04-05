@@ -74,7 +74,7 @@
               <h2>Your Recommended Outfit</h2>
             </div>
 
-            <div class="score-badge">Score: {{ formatScore(selectedOutfit.score) }}</div>
+            <!-- <div class="score-badge">Score: {{ formatScore(selectedOutfit.score) }}</div> -->
           </div>
 
           <div class="outfit-grid">
@@ -119,7 +119,7 @@
           <section class="reason-card">
             <div class="reason-header">
               <h3>Why this outfit?</h3>
-              <span class="reason-tag">Scoring Details</span>
+              <router-link class="details-link" to="/explanations"> Scoring Details </router-link>
             </div>
 
             <ul class="reason-list">
@@ -177,7 +177,7 @@
               <strong>Outfit {{ outfit.index + 1 }}</strong>
               <p>{{ getCompactSummary(outfit) }}</p>
             </div>
-            <span>{{ formatScore(outfit.score) }}</span>
+            <!-- <span>{{ formatScore(outfit.score) }}</span> -->
           </button>
         </section>
       </aside>
@@ -291,10 +291,10 @@ function formatText(value) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
-function formatScore(score) {
-  const numericScore = Number(score || 0)
-  return numericScore.toFixed(2)
-}
+// function formatScore(score) {
+//   const numericScore = Number(score || 0)
+//   return numericScore.toFixed(2)
+// }
 
 function getVisualClass(category) {
   const map = {
@@ -429,6 +429,20 @@ async function loadRecommendations() {
   }
 }
 
+// function goToExplanation() {
+//   if (!selectedOutfit.value) return
+
+//   router.push({
+//     path: '/explanations',
+//     query: {
+//       source: 'recommendation',
+//     },
+//     state: {
+//       selectedOutfit: selectedOutfit.value,
+//     },
+//   })
+// }
+
 function saveOutfit() {
   if (!selectedOutfit.value) return
   alert('Outfit saved successfully.')
@@ -548,6 +562,12 @@ onMounted(() => {
 
 .actions-row {
   margin-top: 18px;
+}
+
+.details-link {
+  color: #49b44a;
+  text-decoration: none;
+  font-weight: 700;
 }
 
 .primary-btn,
@@ -944,5 +964,10 @@ onMounted(() => {
   .accessory-chip {
     min-width: 100%;
   }
+}
+.clickable {
+  cursor: pointer;
+  border: none;
+  background: none;
 }
 </style>
