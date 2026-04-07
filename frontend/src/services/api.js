@@ -66,6 +66,26 @@ export async function loginUser(payload) {
   return handleResponse(response)
 }
 
+export async function forgotPassword(payload) {
+  const response = await fetch(`${BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+
+  return handleResponse(response)
+}
+
+export async function resetPassword(payload) {
+  const response = await fetch(`${BASE_URL}/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+
+  return handleResponse(response)
+}
+
 export async function getCurrentUser(userId = getCurrentUserId()) {
   const response = await fetch(`${BASE_URL}/auth/me/${encodeURIComponent(userId)}`)
   return handleResponse(response)

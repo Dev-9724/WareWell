@@ -20,12 +20,12 @@ def check_temperature(item: dict, temperature: float) -> tuple[bool, str | None]
     if item_min is None or item_max is None:
         return False, "missing_temperature_range"
 
-    TEMP_BUFFER = 3.0
+    temp_buffer = 3.0
 
-    if temperature < (item_min - TEMP_BUFFER):
+    if temperature < (item_min - temp_buffer):
         return False, "too_cold_for_item"
 
-    if temperature > (item_max + TEMP_BUFFER):
+    if temperature > (item_max + temp_buffer):
         return False, "too_hot_for_item"
 
     return True, None
@@ -57,7 +57,44 @@ def check_season(item: dict, current_season: str) -> tuple[bool, str | None]:
     return True, None
 
 
-def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, Any]:
+def normalize_text(value: str | None) -> str:
+    return str(value or "").strip().lower()
+
+
+def check_occasion(item: dict, occasion: str | None) -> tuple[bool, str | None]:
+    if not occasion:
+        return True, None
+
+    requested = normalize_text(occasion)
+    item_occasion = normalize_text(item.get("occasion"))
+
+    if not item_occasion:
+        return True, None
+
+    if item_occasion == requested:
+        return True, None
+
+    allowed_map = {
+        "formal": {"formal"},
+        "office": {"office", "formal"},
+        "casual": {"casual"},
+        "party": {"party", "formal", "casual"},
+        "sport": {"sport", "casual"},
+    }
+
+    allowed = allowed_map.get(requested, {requested})
+
+    if item_occasion in allowed:
+        return True, None
+
+    return False, "occasion_mismatch"
+
+
+def apply_constraints(
+    items: List[dict],
+    weather_snapshot: dict,
+    occasion: str | None = None,
+) -> Dict[str, Any]:
     temperature = weather_snapshot.get("temperature")
     rain = weather_snapshot.get("rain", 0.0)
     timestamp = weather_snapshot.get("timestamp")
@@ -93,13 +130,18 @@ def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, An
         if not ok_season:
             reasons.append(reason_season)
 
+        ok_occasion, reason_occasion = check_occasion(item, occasion)
+        if not ok_occasion:
+            reasons.append(reason_occasion)
+
         if reasons:
             rejected_items.append({
                 "id": str(item.get("_id")),
                 "name": item.get("name"),
                 "category": item.get("category"),
                 "colour_primary": item.get("colour_primary"),
-                "reasons": reasons
+                "occasion": item.get("occasion"),
+                "reasons": reasons,
             })
         else:
             valid_items.append({
@@ -107,6 +149,7 @@ def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, An
                 "user_id": item.get("user_id"),
                 "name": item.get("name"),
                 "category": item.get("category"),
+                "occasion": item.get("occasion"),
                 "colour_primary": item.get("colour_primary"),
                 "colour_secondary": item.get("colour_secondary"),
                 "formality_level": item.get("formality_level"),
@@ -129,6 +172,7 @@ def apply_constraints(items: List[dict], weather_snapshot: dict) -> Dict[str, An
             "city": weather_snapshot.get("city"),
             "condition": weather_snapshot.get("condition"),
         },
+        "occasion_used": occasion,
         "valid_count": len(valid_items),
         "rejected_count": len(rejected_items),
         "valid_items": valid_items,

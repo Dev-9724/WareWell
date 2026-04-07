@@ -11,11 +11,15 @@ import EvaluationPage from '../pages/EvaluationPage.vue'
 import ExplanationsPage from '../pages/ExplanationsPage.vue'
 import FeedbackPage from '../pages/FeedbackPage.vue'
 import BaselineComparisonPage from '../pages/BaselineComparisonPage.vue'
+import ForgotPasswordPage from '../pages/ForgotPasswordPage.vue'
+import ResetPasswordPage from '../pages/ResetPasswordPage.vue'
 
 const routes = [
   { path: '/', name: 'landing', component: LandingPage, meta: { public: true } },
   { path: '/login', name: 'login', component: LoginPage, meta: { public: true } },
   { path: '/signup', name: 'signup', component: SignupPage, meta: { public: true } },
+  { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage, meta: { public: true } },
+  { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage, meta: { public: true } },
   { path: '/dashboard', name: 'dashboard', component: DashboardPage },
   { path: '/wardrobe', name: 'wardrobe', component: WardrobePage },
   { path: '/add-item', name: 'add-item', component: AddItemPage },
@@ -23,7 +27,7 @@ const routes = [
   { path: '/evaluation', name: 'evaluation', component: EvaluationPage },
   { path: '/explanations', name: 'explanations', component: ExplanationsPage },
   { path: '/feedback', name: 'feedback', component: FeedbackPage },
-  { path: '/baseline-comparison', name: 'baseline-comparison', component: BaselineComparisonPage, }
+  { path: '/baseline-comparison', name: 'baseline-comparison', component: BaselineComparisonPage },
 ]
 
 const router = createRouter({
@@ -40,7 +44,10 @@ router.beforeEach((to) => {
     return '/login'
   }
 
-  if (isLoggedIn && (to.path === '/login' || to.path === '/signup' || to.path === '/')) {
+  if (
+    isLoggedIn &&
+    (to.path === '/login' || to.path === '/signup' || to.path === '/')
+  ) {
     return '/dashboard'
   }
 

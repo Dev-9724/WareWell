@@ -73,14 +73,18 @@
               <p class="section-label">Top Recommendation</p>
               <h2>Your Recommended Outfit</h2>
             </div>
-
-            <!-- <div class="score-badge">Score: {{ formatScore(selectedOutfit.score) }}</div> -->
           </div>
 
           <div class="outfit-grid">
             <article v-for="card in displayCards" :key="card.category" class="item-card">
-              <div class="item-visual" :class="card.visualClass">
-                <img v-if="card.image" :src="card.image" :alt="card.title" class="item-image" />
+              <div class="item-visual" :class="!card.image ? card.visualClass : ''">
+                <img
+                  v-if="card.image"
+                  :src="card.image"
+                  :alt="card.title"
+                  class="item-image"
+                  @error="handleImageError(card.category)"
+                />
                 <span v-else>{{ card.category }}</span>
               </div>
 
@@ -119,7 +123,7 @@
           <section class="reason-card">
             <div class="reason-header">
               <h3>Why this outfit?</h3>
-              <router-link class="details-link" to="/explanations"> Scoring Details </router-link>
+              <router-link class="details-link" to="/explanations">Scoring Details</router-link>
             </div>
 
             <ul class="reason-list">
@@ -177,7 +181,6 @@
               <strong>Outfit {{ outfit.index + 1 }}</strong>
               <p>{{ getCompactSummary(outfit) }}</p>
             </div>
-            <!-- <span>{{ formatScore(outfit.score) }}</span> -->
           </button>
         </section>
       </aside>
@@ -207,8 +210,34 @@ const validItemCount = ref(0)
 const rejectedItemCount = ref(0)
 const selectedIndex = ref(0)
 
+const brokenImages = ref({})
+
 const selectedOutfit = computed(() => rankedOutfits.value[selectedIndex.value] || null)
 const otherOutfits = computed(() => rankedOutfits.value)
+
+function getRawImageValue(item) {
+  if (!item) return ''
+
+  return (
+    item.image_url ||
+    item.image_path ||
+    item.image ||
+    item.imageUrl ||
+    item.imagePath ||
+    item.photo_url ||
+    item.photo ||
+    ''
+  )
+}
+
+function getResolvedImage(item, category) {
+  if (!item) return ''
+
+  if (brokenImages.value[category]) return ''
+
+  const rawImage = getRawImageValue(item)
+  return rawImage ? getImageUrl(rawImage) : ''
+}
 
 const displayCards = computed(() => {
   const selected = selectedOutfit.value
@@ -221,7 +250,7 @@ const displayCards = computed(() => {
       category,
       title: item?.name || item?.title || (item ? formatText(item.category) : `No ${category}`),
       meta: buildItemMeta(item),
-      image: item?.image_url ? getImageUrl(item.image_url) : '',
+      image: getResolvedImage(item, category),
       visualClass: getVisualClass(category),
     }
   })
@@ -291,11 +320,6 @@ function formatText(value) {
     .replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
-// function formatScore(score) {
-//   const numericScore = Number(score || 0)
-//   return numericScore.toFixed(2)
-// }
-
 function getVisualClass(category) {
   const map = {
     Top: 'visual-top',
@@ -314,6 +338,8 @@ function buildItemMeta(item) {
 
   if (item.colour_primary) {
     values.push(formatText(item.colour_primary))
+  } else if (item.color) {
+    values.push(formatText(item.color))
   }
 
   const seasons = item.season || item.seasons
@@ -323,11 +349,6 @@ function buildItemMeta(item) {
 
   return values.join(' • ') || 'Selected wardrobe item'
 }
-
-// function getAccessoryTitle(item) {
-//   if (!item) return 'Accessory'
-//   return item.name || item.title || 'Accessory'
-// }
 
 function normalizeCategory(category) {
   const value = String(category || '')
@@ -399,10 +420,18 @@ function getCompactSummary(outfit) {
   return combined.join(' • ')
 }
 
+function handleImageError(category) {
+  brokenImages.value = {
+    ...brokenImages.value,
+    [category]: true,
+  }
+}
+
 async function loadRecommendations() {
   loading.value = true
   error.value = ''
   message.value = ''
+  brokenImages.value = {}
 
   try {
     const response = await getRankedOutfits(occasion.value, topK.value, maxOutfits.value)
@@ -428,20 +457,6 @@ async function loadRecommendations() {
     loading.value = false
   }
 }
-
-// function goToExplanation() {
-//   if (!selectedOutfit.value) return
-
-//   router.push({
-//     path: '/explanations',
-//     query: {
-//       source: 'recommendation',
-//     },
-//     state: {
-//       selectedOutfit: selectedOutfit.value,
-//     },
-//   })
-// }
 
 function saveOutfit() {
   if (!selectedOutfit.value) return
@@ -637,15 +652,6 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
-.score-badge {
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: #0b1730;
-  color: #ffffff;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
 .outfit-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -671,12 +677,14 @@ onMounted(() => {
   font-weight: 800;
   text-align: center;
   overflow: hidden;
+  background: #f8fafc;
 }
 
 .item-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .visual-top {
@@ -776,11 +784,6 @@ onMounted(() => {
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 14px;
-}
-
-.reason-tag {
-  color: #39a94b;
-  font-weight: 700;
 }
 
 .reason-list {
@@ -953,10 +956,6 @@ onMounted(() => {
     align-items: flex-start;
   }
 
-  .score-badge {
-    white-space: normal;
-  }
-
   .item-visual {
     height: 180px;
   }
@@ -964,10 +963,5 @@ onMounted(() => {
   .accessory-chip {
     min-width: 100%;
   }
-}
-.clickable {
-  cursor: pointer;
-  border: none;
-  background: none;
 }
 </style>

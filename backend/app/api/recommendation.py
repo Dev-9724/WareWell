@@ -51,7 +51,10 @@ async def get_latest_weather_snapshot(db):
 
 
 @router.post("/filter")
-async def filter_wardrobe_items(user_id: str = Query(..., min_length=1)):
+async def filter_wardrobe_items(
+    user_id: str = Query(..., min_length=1),
+    occasion: str | None = Query(None),
+):
     """
     Phase 5:
     Apply hard constraints to wardrobe items using latest weather snapshot.
@@ -70,7 +73,7 @@ async def filter_wardrobe_items(user_id: str = Query(..., min_length=1)):
         )
 
     try:
-        filtered_result = apply_constraints(items, latest_weather)
+        filtered_result = apply_constraints(items, latest_weather, occasion=occasion)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -80,6 +83,7 @@ async def filter_wardrobe_items(user_id: str = Query(..., min_length=1)):
 @router.post("/outfits")
 async def generate_recommended_outfits(
     user_id: str = Query(..., min_length=1),
+    occasion: str | None = Query(None),
     max_outfits: int = Query(20, ge=1, le=100),
 ):
     """
@@ -100,20 +104,20 @@ async def generate_recommended_outfits(
         )
 
     try:
-        filtered_result = apply_constraints(items, latest_weather)
+        filtered_result = apply_constraints(items, latest_weather, occasion=occasion)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
     valid_items = filtered_result["valid_items"]
     outfit_result = generate_outfits(valid_items)
 
-    # limit outfits for practicality
     limited_outfits = outfit_result["outfits"][:max_outfits]
     outfit_result["outfits"] = limited_outfits
     outfit_result["outfit_count"] = len(limited_outfits)
 
     return {
         "weather_used": filtered_result["weather_used"],
+        "occasion_used": occasion,
         "valid_item_count": filtered_result["valid_count"],
         "rejected_item_count": filtered_result["rejected_count"],
         "rejected_items": filtered_result["rejected_items"],
@@ -148,7 +152,7 @@ async def generate_ranked_outfits(
         )
 
     try:
-        filtered_result = apply_constraints(items, latest_weather)
+        filtered_result = apply_constraints(items, latest_weather, occasion=occasion)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -158,6 +162,7 @@ async def generate_ranked_outfits(
     if not outfit_result["can_generate_outfits"]:
         return {
             "weather_used": filtered_result["weather_used"],
+            "occasion_used": occasion,
             "valid_item_count": filtered_result["valid_count"],
             "rejected_item_count": filtered_result["rejected_count"],
             "rejected_items": filtered_result["rejected_items"],
@@ -226,7 +231,7 @@ async def generate_outfit_explanations(
         )
 
     try:
-        filtered_result = apply_constraints(items, latest_weather)
+        filtered_result = apply_constraints(items, latest_weather, occasion=occasion)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -236,6 +241,7 @@ async def generate_outfit_explanations(
     if not outfit_result["can_generate_outfits"]:
         return {
             "weather_used": filtered_result["weather_used"],
+            "occasion_used": occasion,
             "valid_item_count": filtered_result["valid_count"],
             "rejected_item_count": filtered_result["rejected_count"],
             "rejected_items": filtered_result["rejected_items"],

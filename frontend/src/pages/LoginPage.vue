@@ -9,6 +9,9 @@
 
       <label for="password">Password</label>
       <input id="password" v-model="form.password" type="password" required />
+      <router-link to="/forgot-password" class="forgot-password-link">
+        Forgot Password?
+      </router-link>
 
       <p v-if="error" class="error-text">{{ error }}</p>
 
@@ -56,9 +59,7 @@ async function handleLogin() {
   } catch (err) {
     console.error('Login error:', err)
 
-    error.value =
-      err?.message ||
-      'Login failed. Please check your email and password.'
+    error.value = err?.message || 'Login failed. Please check your email and password.'
   } finally {
     loading.value = false
   }
@@ -123,5 +124,17 @@ input {
 .footer-text {
   margin: 8px 0 0;
   color: #66758f;
+}
+.forgot-password-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
 }
 </style>
