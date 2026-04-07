@@ -91,9 +91,56 @@ export async function getCurrentUser(userId = getCurrentUserId()) {
   return handleResponse(response)
 }
 
+export async function fetchCurrentWeather(city) {
+  const resolvedCity = (city || '').trim()
+
+  if (!resolvedCity) {
+    throw new Error('Please enter a location.')
+  }
+
+  const response = await fetch(
+    `${BASE_URL}/weather/current?city=${encodeURIComponent(resolvedCity)}`
+  )
+
+  return handleResponse(response)
+}
+
 export async function getLatestWeather() {
   const response = await fetch(`${BASE_URL}/weather/latest`)
   return handleResponse(response)
+}
+
+export async function fetchWeatherWithFallback(city) {
+  try {
+    const liveWeather = await fetchCurrentWeather(city)
+    return {
+      ...liveWeather,
+      fallback_used: false,
+    }
+  } catch (liveError) {
+    console.warn('Live weather fetch failed, using latest snapshot instead:', liveError)
+
+    try {
+      const snapshotWeather = await getLatestWeather()
+      return {
+        ...snapshotWeather,
+        fallback_used: true,
+        fallback_reason: liveError?.message || 'Live weather fetch failed',
+      }
+    } catch (snapshotError) {
+      const causeError =
+        liveError instanceof Error
+          ? liveError
+          : snapshotError instanceof Error
+            ? snapshotError
+            : undefined
+
+      throw new Error(
+        (liveError?.message || snapshotError?.message || 'Unable to fetch weather data.'),
+        causeError ? { cause: causeError } : undefined
+      )
+    }
+  }
 }
 
 export async function getWardrobeItems(userId = getCurrentUserId()) {

@@ -4,14 +4,14 @@
       <p class="eyebrow">Ranked Outfit Selection</p>
       <h1>Recommended Outfit</h1>
       <p class="subtitle">
-        Generate a complete outfit from your wardrobe using context-aware filtering, compatibility
-        checks, and multi-criteria ranking.
+        Generate a complete outfit from your wardrobe using context-aware filtering,
+        compatibility checks, and multi-criteria ranking.
       </p>
     </section>
 
     <section class="controls-card">
       <div class="controls-grid">
-        <div class="field">
+        <div class="field-group">
           <label for="occasion">Occasion</label>
           <select id="occasion" v-model="occasion">
             <option value="casual">Casual</option>
@@ -21,846 +21,723 @@
           </select>
         </div>
 
-        <div class="field">
+        <div class="field-group">
           <label for="topK">Number of Recommendations</label>
           <input id="topK" v-model.number="topK" type="number" min="1" max="20" />
         </div>
 
-        <div class="field">
+        <div class="field-group">
           <label for="maxOutfits">Max Outfits</label>
           <input id="maxOutfits" v-model.number="maxOutfits" type="number" min="1" max="100" />
+        </div>
+
+        <div class="field-group">
+          <label for="location">Location</label>
+          <input
+            id="location"
+            v-model.trim="location"
+            type="text"
+            placeholder="Enter city e.g. London"
+          />
         </div>
       </div>
 
       <div class="actions-row">
-        <button class="primary-btn" :disabled="loading" @click="loadRecommendations">
-          {{ loading ? 'Generating...' : 'Generate Recommendations' }}
+        <button class="generate-btn" :disabled="isLoading" @click="generateRecommendations">
+          {{ isLoading ? 'Generating...' : 'Generate Recommendations' }}
         </button>
       </div>
+
+      <p v-if="statusMessage" class="status-message">
+        {{ statusMessage }}
+      </p>
+
+      <p v-if="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </p>
     </section>
 
-    <section v-if="error" class="status-card error-card">
-      <h3>Unable to generate recommendations</h3>
-      <p>{{ error }}</p>
-    </section>
-
-    <section v-else-if="message" class="status-card">
-      <p>{{ message }}</p>
-    </section>
-
-    <section class="summary-grid">
-      <article class="summary-item">
-        <span>Valid Items</span>
-        <strong>{{ validItemCount }}</strong>
-      </article>
-
-      <article class="summary-item">
-        <span>Rejected Items</span>
-        <strong>{{ rejectedItemCount }}</strong>
-      </article>
-
-      <article class="summary-item">
-        <span>Returned Outfits</span>
-        <strong>{{ rankedOutfits.length }}</strong>
+    <section v-if="summaryCards.length" class="summary-grid">
+      <article v-for="card in summaryCards" :key="card.label" class="summary-card">
+        <p>{{ card.label }}</p>
+        <h3>{{ card.value }}</h3>
       </article>
     </section>
 
-    <section v-if="selectedOutfit" class="results-layout">
-      <div class="results-main">
-        <section class="outfit-card">
-          <div class="section-heading">
-            <div>
-              <p class="section-label">Top Recommendation</p>
-              <h2>Your Recommended Outfit</h2>
-            </div>
-          </div>
+    <section v-if="topRecommendation" class="results-layout">
+      <div class="left-column">
+        <article class="main-result-card">
+          <p class="eyebrow">Top Recommendation</p>
+          <h2>Your Recommended Outfit</h2>
 
           <div class="outfit-grid">
-            <article v-for="card in displayCards" :key="card.category" class="item-card">
-              <div class="item-visual" :class="!card.image ? card.visualClass : ''">
+            <article
+              v-for="(item, index) in displayedTopItems"
+              :key="item._id || item.id || `${item.category}-${index}`"
+              class="outfit-item-card"
+            >
+              <div class="item-image-frame">
                 <img
-                  v-if="card.image"
-                  :src="card.image"
-                  :alt="card.title"
+                  v-if="resolveImage(item)"
+                  :src="getImageUrl(resolveImage(item))"
+                  :alt="item.name || item.category || 'Wardrobe item'"
                   class="item-image"
-                  @error="handleImageError(card.category)"
                 />
-                <span v-else>{{ card.category }}</span>
+                <div v-else class="item-placeholder">
+                  {{ formatText(item.category || 'Item') }}
+                </div>
               </div>
 
-              <div class="item-body">
-                <p class="item-category">{{ card.category }}</p>
-                <h3>{{ card.title }}</h3>
-                <p class="item-meta">{{ card.meta }}</p>
+              <div class="item-details">
+                <p class="item-category">{{ formatText(item.category) }}</p>
+                <h4>{{ item.name || 'Unnamed Item' }}</h4>
+                <p class="item-meta">
+                  {{ item.color || 'Unknown colour' }}
+                  <span v-if="formatSeasons(item)"> • {{ formatSeasons(item) }}</span>
+                </p>
               </div>
             </article>
           </div>
 
-          <section v-if="accessoryItems.length" class="accessories-card">
-            <div class="accessories-header">
-              <h3>Accessories</h3>
-              <span class="accessories-badge">
-                {{ accessoryItems.length }} item{{ accessoryItems.length > 1 ? 's' : '' }}
-              </span>
-            </div>
-
-            <div class="accessory-chip-list">
-              <div
-                v-for="(item, index) in accessoryItems"
-                :key="item._id || item.id || item.name || index"
-                class="accessory-chip"
-              >
-                <span class="accessory-chip-title">
-                  {{ item.name || item.title || 'Accessory' }}
-                </span>
-                <span class="accessory-chip-meta">
-                  {{ buildItemMeta(item) }}
-                </span>
-              </div>
-            </div>
-          </section>
-
-          <section class="reason-card">
+          <div class="reason-box">
             <div class="reason-header">
               <h3>Why this outfit?</h3>
-              <router-link class="details-link" to="/explanations">Scoring Details</router-link>
+              <button class="scoring-link" type="button" @click="goToEvaluation">
+                Scoring Details
+              </button>
             </div>
 
             <ul class="reason-list">
-              <li v-for="(reason, index) in explanationReasons" :key="index">
-                <span class="reason-dot" :class="'dot-' + (index % 4)"></span>
-                <span>{{ reason }}</span>
+              <li>
+                <span class="reason-dot green"></span>
+                Strong weather suitability for current conditions
+              </li>
+              <li>
+                <span class="reason-dot yellow"></span>
+                Good occasion alignment for the selected context
+              </li>
+              <li>
+                <span class="reason-dot blue"></span>
+                Colour combination is visually consistent
+              </li>
+              <li>
+                <span class="reason-dot green"></span>
+                Supports sustainable wardrobe rotation
+              </li>
+              <li>
+                <span class="reason-dot green"></span>
+                Comfort is likely to be high in the current weather
               </li>
             </ul>
-          </section>
-
-          <div class="button-stack">
-            <button class="save-btn" @click="saveOutfit">Save Outfit</button>
-            <button class="outline-btn" @click="loadRecommendations">Generate Another</button>
-            <button class="ghost-btn" @click="goToFeedback">Give Feedback</button>
           </div>
-        </section>
+
+          <div class="action-stack">
+            <button class="save-btn" type="button" @click="saveOutfit">
+              Save Outfit
+            </button>
+            <button class="secondary-btn" type="button" @click="generateRecommendations">
+              Generate Another
+            </button>
+            <button class="feedback-btn" type="button" @click="goToFeedback">
+              Give Feedback
+            </button>
+          </div>
+        </article>
       </div>
 
-      <aside class="results-sidebar">
-        <section class="context-card">
+      <div class="right-column">
+        <article class="side-card">
           <h3>Context Used</h3>
 
-          <div class="context-row">
-            <span>Occasion</span>
-            <strong>{{ formatText(occasionUsed || occasion) }}</strong>
-          </div>
+          <div class="context-list">
+            <div class="context-row">
+              <span>Occasion</span>
+              <strong>{{ formatText(occasion) }}</strong>
+            </div>
 
-          <div class="context-row">
-            <span>Temperature</span>
-            <strong>{{ formattedTemperature }}</strong>
-          </div>
+            <div class="context-row">
+              <span>Temperature</span>
+              <strong>{{ formatTemperature(activeWeather?.temperature) }}</strong>
+            </div>
 
-          <div class="context-row">
-            <span>Season</span>
-            <strong>{{ formattedSeason }}</strong>
-          </div>
+            <div class="context-row">
+              <span>Season</span>
+              <strong>{{ deriveSeason(activeWeather?.temperature) }}</strong>
+            </div>
 
-          <div class="context-row">
-            <span>Condition</span>
-            <strong>{{ formattedCondition }}</strong>
-          </div>
-        </section>
+            <div class="context-row">
+              <span>Condition</span>
+              <strong>{{ activeWeather?.condition || 'N/A' }}</strong>
+            </div>
 
-        <section class="other-card">
+            <div class="context-row">
+              <span>Location</span>
+              <strong>{{ activeWeather?.city || location || 'N/A' }}</strong>
+            </div>
+
+            <div class="context-row">
+              <span>Source</span>
+              <strong>
+                {{
+                  activeWeather?.fallback_used
+                    ? 'Last Snapshot'
+                    : formatText(activeWeather?.source || 'Live')
+                }}
+              </strong>
+            </div>
+          </div>
+        </article>
+
+        <article v-if="otherOutfits.length" class="side-card">
           <h3>Other Outfits</h3>
 
-          <button
-            v-for="outfit in otherOutfits"
-            :key="outfit.index"
-            class="other-outfit"
-            :class="{ active: outfit.index === selectedOutfit.index }"
-            @click="selectedIndex = outfit.index"
-          >
-            <div>
-              <strong>Outfit {{ outfit.index + 1 }}</strong>
-              <p>{{ getCompactSummary(outfit) }}</p>
-            </div>
-          </button>
-        </section>
-      </aside>
+          <div class="other-outfits-list">
+            <button
+              v-for="(outfit, index) in otherOutfits"
+              :key="outfit.rank || index"
+              type="button"
+              class="other-outfit-btn"
+              @click="selectOtherOutfit(index)"
+            >
+              <strong>Outfit {{ index + 1 }}</strong>
+              <span>{{ compactOutfitNames(outfit) }}</span>
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section v-if="!isLoading && hasGenerated && !topRecommendation" class="empty-card">
+      <p>No outfit could be generated for the selected options.</p>
     </section>
   </div>
 </template>
 
-<script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { getRankedOutfits, getImageUrl } from '../services/api'
+<script>
+import {
+  fetchWeatherWithFallback,
+  getRankedOutfits,
+  getImageUrl,
+} from '../services/api'
 
-const router = useRouter()
+export default {
+  name: 'RecommendationsPage',
 
-const occasion = ref('casual')
-const topK = ref(1)
-const maxOutfits = ref(20)
-
-const loading = ref(false)
-const error = ref('')
-const message = ref('')
-
-const rankedOutfits = ref([])
-const weatherUsed = ref({})
-const occasionUsed = ref('')
-const validItemCount = ref(0)
-const rejectedItemCount = ref(0)
-const selectedIndex = ref(0)
-
-const brokenImages = ref({})
-
-const selectedOutfit = computed(() => rankedOutfits.value[selectedIndex.value] || null)
-const otherOutfits = computed(() => rankedOutfits.value)
-
-function getRawImageValue(item) {
-  if (!item) return ''
-
-  return (
-    item.image_url ||
-    item.image_path ||
-    item.image ||
-    item.imageUrl ||
-    item.imagePath ||
-    item.photo_url ||
-    item.photo ||
-    ''
-  )
-}
-
-function getResolvedImage(item, category) {
-  if (!item) return ''
-
-  if (brokenImages.value[category]) return ''
-
-  const rawImage = getRawImageValue(item)
-  return rawImage ? getImageUrl(rawImage) : ''
-}
-
-const displayCards = computed(() => {
-  const selected = selectedOutfit.value
-  if (!selected) return []
-
-  return ['Top', 'Bottom', 'Shoes', 'Outerwear'].map((category) => {
-    const item = selected.itemsByCategory[category] || null
-
+  data() {
     return {
-      category,
-      title: item?.name || item?.title || (item ? formatText(item.category) : `No ${category}`),
-      meta: buildItemMeta(item),
-      image: getResolvedImage(item, category),
-      visualClass: getVisualClass(category),
+      occasion: 'casual',
+      topK: 1,
+      maxOutfits: 20,
+      location: 'London',
+
+      isLoading: false,
+      hasGenerated: false,
+      errorMessage: '',
+      statusMessage: '',
+
+      activeWeather: null,
+      recommendationResult: null,
+      selectedRecommendationIndex: 0,
     }
-  })
-})
+  },
 
-const accessoryItems = computed(() => {
-  const selected = selectedOutfit.value
-  if (!selected) return []
-  return Array.isArray(selected.accessoryItems) ? selected.accessoryItems : []
-})
-
-const explanationReasons = computed(() => {
-  const selected = selectedOutfit.value
-  if (!selected) return []
-
-  const breakdown = selected.raw?.score_breakdown || {}
-  const reasons = []
-
-  if (Number(breakdown.weather_fit || 0) > 0) {
-    reasons.push('Strong weather suitability for current conditions')
-  }
-
-  if (Number(breakdown.formality_match || 0) > 0) {
-    reasons.push('Good occasion alignment for the selected context')
-  }
-
-  if (Number(breakdown.colour_harmony || 0) > 0) {
-    reasons.push('Colour combination is visually consistent')
-  }
-
-  if (Number(breakdown.usage_balance || 0) > 0) {
-    reasons.push('Supports sustainable wardrobe rotation')
-  }
-
-  if (Number(breakdown.comfort || 0) > 0) {
-    reasons.push('Comfort is likely to be high in the current weather')
-  }
-
-  if (accessoryItems.value.length > 0) {
-    reasons.push('Accessory selection helps complete the overall outfit composition')
-  }
-
-  if (!reasons.length) {
-    reasons.push('This outfit achieved the strongest overall ranking score.')
-  }
-
-  return reasons
-})
-
-const formattedTemperature = computed(() => {
-  const value = Number(weatherUsed.value?.temperature)
-  return Number.isFinite(value) ? `${Math.round(value)}°C` : 'Not available'
-})
-
-const formattedSeason = computed(() => {
-  return weatherUsed.value?.season ? formatText(weatherUsed.value.season) : 'Not specified'
-})
-
-const formattedCondition = computed(() => {
-  return weatherUsed.value?.condition ? formatText(weatherUsed.value.condition) : 'Unknown'
-})
-
-function formatText(value) {
-  if (!value) return ''
-  return String(value)
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (char) => char.toUpperCase())
-}
-
-function getVisualClass(category) {
-  const map = {
-    Top: 'visual-top',
-    Bottom: 'visual-bottom',
-    Shoes: 'visual-shoes',
-    Outerwear: 'visual-outerwear',
-  }
-
-  return map[category] || ''
-}
-
-function buildItemMeta(item) {
-  if (!item) return 'Item unavailable'
-
-  const values = []
-
-  if (item.colour_primary) {
-    values.push(formatText(item.colour_primary))
-  } else if (item.color) {
-    values.push(formatText(item.color))
-  }
-
-  const seasons = item.season || item.seasons
-  if (Array.isArray(seasons) && seasons.length) {
-    values.push(seasons.map((entry) => String(entry).toLowerCase()).join(', '))
-  }
-
-  return values.join(' • ') || 'Selected wardrobe item'
-}
-
-function normalizeCategory(category) {
-  const value = String(category || '')
-    .trim()
-    .toLowerCase()
-
-  if (value === 'top') return 'Top'
-  if (value === 'bottom') return 'Bottom'
-  if (value === 'shoes') return 'Shoes'
-  if (value === 'outerwear') return 'Outerwear'
-  if (value === 'accessory' || value === 'accessories') return 'Accessory'
-
-  return ''
-}
-
-function extractRawItems(outfit) {
-  if (Array.isArray(outfit?.items)) return outfit.items
-  if (Array.isArray(outfit?.selected_items)) return outfit.selected_items
-  return []
-}
-
-function normalizeOutfit(outfit, index) {
-  const rawItems = extractRawItems(outfit)
-
-  const itemsByCategory = {
-    Top: null,
-    Bottom: null,
-    Shoes: null,
-    Outerwear: null,
-  }
-
-  const accessoryItems = []
-
-  rawItems.forEach((item) => {
-    const category = normalizeCategory(item?.category)
-
-    if (category === 'Accessory') {
-      accessoryItems.push(item)
-      return
-    }
-
-    if (category && !itemsByCategory[category]) {
-      itemsByCategory[category] = item
-    }
-  })
-
-  return {
-    index,
-    score:
-      outfit?.total_score ?? outfit?.final_score ?? outfit?.score ?? outfit?.weighted_score ?? 0,
-    raw: outfit,
-    itemsByCategory,
-    accessoryItems,
-  }
-}
-
-function getCompactSummary(outfit) {
-  const mainItems = ['Top', 'Bottom', 'Shoes', 'Outerwear']
-    .map((category) => outfit.itemsByCategory[category]?.name || null)
-    .filter(Boolean)
-
-  const accessories = Array.isArray(outfit.accessoryItems)
-    ? outfit.accessoryItems.map((item) => item?.name || item?.title || null).filter(Boolean)
-    : []
-
-  const combined = [...mainItems, ...accessories]
-
-  if (!combined.length) return 'Generated outfit'
-  return combined.join(' • ')
-}
-
-function handleImageError(category) {
-  brokenImages.value = {
-    ...brokenImages.value,
-    [category]: true,
-  }
-}
-
-async function loadRecommendations() {
-  loading.value = true
-  error.value = ''
-  message.value = ''
-  brokenImages.value = {}
-
-  try {
-    const response = await getRankedOutfits(occasion.value, topK.value, maxOutfits.value)
-
-    weatherUsed.value = response?.weather_used || {}
-    occasionUsed.value = response?.occasion_used || occasion.value
-    validItemCount.value = Number(response?.valid_item_count || 0)
-    rejectedItemCount.value = Number(response?.rejected_item_count || 0)
-
-    const rawRanked = Array.isArray(response?.ranked_outfits) ? response.ranked_outfits : []
-    rankedOutfits.value = rawRanked.map((outfit, index) => normalizeOutfit(outfit, index))
-    selectedIndex.value = 0
-
-    if (!rankedOutfits.value.length) {
-      message.value = response?.message || 'No ranked outfits were generated.'
-    }
-  } catch (err) {
-    console.error(err)
-    rankedOutfits.value = []
-    selectedIndex.value = 0
-    error.value = err?.message || 'Failed to generate outfit recommendations.'
-  } finally {
-    loading.value = false
-  }
-}
-
-function saveOutfit() {
-  if (!selectedOutfit.value) return
-  alert('Outfit saved successfully.')
-}
-
-function goToFeedback() {
-  if (!selectedOutfit.value) return
-
-  const payload = {
-    outfit_id: selectedOutfit.value.raw?.outfit_id || `outfit-${selectedOutfit.value.index + 1}`,
-    outfit_name: `Generated outfit ${selectedOutfit.value.index + 1}`,
-    occasion: occasionUsed.value || occasion.value,
-    score: selectedOutfit.value.score,
-    items: extractRawItems(selectedOutfit.value.raw),
-  }
-
-  router.push({
-    path: '/feedback',
-    query: {
-      source: 'recommendation',
+  computed: {
+    recommendations() {
+      return Array.isArray(this.recommendationResult?.ranked_outfits)
+        ? this.recommendationResult.ranked_outfits
+        : []
     },
-    state: {
-      selectedOutfit: payload,
-    },
-  })
-}
 
-onMounted(() => {
-  loadRecommendations()
-})
+    topRecommendation() {
+      return this.recommendations[this.selectedRecommendationIndex] || null
+    },
+
+    otherOutfits() {
+      if (!this.recommendations.length) return []
+      return this.recommendations.filter((_, index) => index !== this.selectedRecommendationIndex)
+    },
+
+    displayedTopItems() {
+      return this.normalizeOutfitItems(this.topRecommendation)
+    },
+
+    summaryCards() {
+      if (!this.recommendationResult) return []
+
+      return [
+        {
+          label: 'Valid Items',
+          value: this.recommendationResult.valid_item_count ?? 0,
+        },
+        {
+          label: 'Rejected Items',
+          value: this.recommendationResult.rejected_item_count ?? 0,
+        },
+        {
+          label: 'Returned Outfits',
+          value: this.recommendationResult.returned_ranked_outfit_count ?? 0,
+        },
+      ]
+    },
+  },
+
+  methods: {
+    getImageUrl,
+
+    formatText(value) {
+      if (!value) return 'N/A'
+      const text = String(value).replace(/_/g, ' ')
+      return text.charAt(0).toUpperCase() + text.slice(1)
+    },
+
+    formatTemperature(value) {
+      return typeof value === 'number' ? `${value}°C` : 'N/A'
+    },
+
+    deriveSeason(temp) {
+      if (typeof temp !== 'number') return 'N/A'
+      if (temp < 10) return 'Winter'
+      if (temp < 18) return 'Spring'
+      if (temp < 26) return 'Summer'
+      return 'Summer'
+    },
+
+    normalizeOutfitItems(recommendation) {
+      if (!recommendation) return []
+      if (Array.isArray(recommendation.items)) return recommendation.items
+      if (Array.isArray(recommendation.outfit)) return recommendation.outfit
+      return []
+    },
+
+    resolveImage(item) {
+      return item?.image_url || item?.image || item?.image_path || item?.imagePath || ''
+    },
+
+    formatSeasons(item) {
+      if (!item) return ''
+      const seasons = item.seasons || item.suitable_seasons || []
+      if (!Array.isArray(seasons) || !seasons.length) return ''
+      return seasons.join(', ')
+    },
+
+    compactOutfitNames(recommendation) {
+      const items = this.normalizeOutfitItems(recommendation)
+      if (!items.length) return 'No items'
+      return items.map((item) => item.name || this.formatText(item.category)).join(' • ')
+    },
+
+    selectOtherOutfit(otherIndex) {
+      const actualIndexes = this.recommendations
+        .map((_, index) => index)
+        .filter((index) => index !== this.selectedRecommendationIndex)
+
+      this.selectedRecommendationIndex = actualIndexes[otherIndex] ?? 0
+    },
+
+    async generateRecommendations() {
+      this.isLoading = true
+      this.hasGenerated = true
+      this.errorMessage = ''
+      this.statusMessage = 'Fetching latest weather...'
+      this.selectedRecommendationIndex = 0
+
+      try {
+        const weather = await fetchWeatherWithFallback(this.location || 'London')
+        this.activeWeather = weather
+
+        if (weather?.fallback_used) {
+          this.statusMessage = 'Live weather failed. Using last saved weather snapshot.'
+        } else {
+          this.statusMessage = 'Live weather loaded. Generating outfit recommendations...'
+        }
+
+        const result = await getRankedOutfits(this.occasion, this.topK, this.maxOutfits)
+        this.recommendationResult = result
+
+        if (result?.weather_used) {
+          this.activeWeather = {
+            ...result.weather_used,
+            fallback_used: weather?.fallback_used || false,
+            source: result?.weather_used?.source || weather?.source || 'live',
+          }
+        }
+
+        if (!this.recommendations.length && result?.message) {
+          this.statusMessage = result.message
+        } else {
+          this.statusMessage = ''
+        }
+      } catch (error) {
+        console.error('Failed to generate recommendations:', error)
+        this.errorMessage =
+          error?.message || 'Failed to fetch weather and generate recommendations.'
+        this.recommendationResult = null
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    goToEvaluation() {
+      this.$router.push({
+        path: '/evaluation',
+        query: {
+          occasion: this.occasion,
+          topK: String(this.topK),
+          maxOutfits: String(this.maxOutfits),
+          location: this.location || '',
+        },
+      })
+    },
+
+    saveOutfit() {
+      window.alert('Save outfit feature can be connected next.')
+    },
+
+    goToFeedback() {
+      const selected = this.topRecommendation
+      if (!selected) {
+        window.alert('Please generate an outfit first.')
+        return
+      }
+
+      const rank = selected.rank || 1
+      this.$router.push({
+        path: '/feedback',
+        query: {
+          occasion: this.occasion,
+          rank: String(rank),
+        },
+      })
+    },
+  },
+}
 </script>
 
 <style scoped>
 .recommendations-page {
-  display: grid;
-  gap: 24px;
+  padding: 18px;
+  background: #f4f7fb;
+  min-height: 100vh;
 }
 
 .hero-card,
 .controls-card,
-.status-card,
-.outfit-card,
-.context-card,
-.other-card,
-.summary-item,
-.reason-card,
-.accessories-card {
+.main-result-card,
+.side-card,
+.summary-card,
+.empty-card {
   background: #ffffff;
   border: 1px solid #e7edf5;
   border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
 }
 
-.hero-card,
-.controls-card,
-.status-card,
-.outfit-card,
-.context-card,
-.other-card,
-.reason-card,
-.accessories-card {
-  padding: 24px;
+.hero-card {
+  padding: 30px 26px;
+  margin-bottom: 16px;
 }
 
-.eyebrow,
-.section-label {
+.eyebrow {
   margin: 0 0 8px;
+  color: #47b157;
   font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #22c55e;
+  letter-spacing: 0.12em;
+  font-weight: 800;
 }
 
-.hero-card h1,
-.section-heading h2,
-.context-card h3,
-.other-card h3,
-.reason-card h3,
-.accessories-header h3 {
+.hero-card h1 {
+  margin: 0 0 10px;
+  font-size: 2.1rem;
+  color: #192132;
+}
+
+.subtitle {
   margin: 0;
-  color: #0f172a;
+  color: #6d7888;
+  line-height: 1.5;
 }
 
-.subtitle,
-.status-card p {
-  margin: 12px 0 0;
-  color: #64748b;
-  line-height: 1.7;
+.controls-card {
+  padding: 20px 16px 14px;
+  margin-bottom: 16px;
 }
 
 .controls-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
-.field {
-  display: grid;
-  gap: 8px;
+.field-group {
+  display: flex;
+  flex-direction: column;
 }
 
-.field label {
+.field-group label {
+  margin-bottom: 8px;
   font-weight: 700;
-  color: #0f172a;
+  color: #1d2433;
 }
 
-.field input,
-.field select {
-  width: 100%;
-  padding: 13px 14px;
-  border: 1px solid #dbe3ef;
-  border-radius: 14px;
+.field-group input,
+.field-group select {
+  height: 52px;
+  border-radius: 16px;
+  border: 1px solid #d8e0ea;
   background: #f8fafc;
-  color: #0f172a;
-  font-size: 0.96rem;
+  padding: 0 14px;
+  font-size: 1rem;
+  outline: none;
 }
 
 .actions-row {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
-.details-link {
-  color: #49b44a;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.primary-btn,
-.save-btn,
-.outline-btn,
-.ghost-btn {
-  width: 100%;
-  border-radius: 16px;
-  padding: 14px 18px;
+.generate-btn {
+  background: #081a46;
+  color: #ffffff;
+  border: none;
+  border-radius: 18px;
+  padding: 16px 22px;
+  min-width: 280px;
+  font-size: 1rem;
   font-weight: 800;
-  font-size: 0.96rem;
   cursor: pointer;
 }
 
-.primary-btn {
-  width: auto;
-  border: none;
-  background: #0b1730;
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
-}
-
-.primary-btn:disabled {
+.generate-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.status-message {
+  margin: 14px 2px 0;
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.error-message {
+  margin: 14px 2px 0;
+  color: #c62828;
+  font-weight: 700;
 }
 
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 14px;
+  margin-bottom: 16px;
 }
 
-.summary-item {
-  padding: 18px 20px;
-  display: grid;
-  gap: 8px;
+.summary-card {
+  padding: 16px 18px;
 }
 
-.summary-item span {
-  color: #64748b;
+.summary-card p {
+  margin: 0 0 8px;
+  color: #6d7888;
 }
 
-.summary-item strong {
+.summary-card h3 {
+  margin: 0;
   font-size: 2rem;
-  color: #0f172a;
+  color: #1a2030;
 }
 
 .results-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.95fr);
-  gap: 20px;
-  align-items: start;
-}
-
-.results-main,
-.results-sidebar {
-  display: grid;
-  gap: 20px;
-}
-
-.section-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  grid-template-columns: minmax(0, 1.9fr) minmax(280px, 1fr);
   gap: 16px;
-  margin-bottom: 20px;
+}
+
+.main-result-card {
+  padding: 18px;
+}
+
+.main-result-card h2 {
+  margin: 0 0 16px;
+  color: #1a2030;
 }
 
 .outfit-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  align-items: stretch;
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
-.item-card {
-  border: 1px solid #dbe3ef;
-  border-radius: 22px;
-  overflow: hidden;
+.outfit-item-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
   background: #ffffff;
+  overflow: hidden;
 }
 
-.item-visual {
+.item-image-frame {
   height: 210px;
-  margin: 14px;
-  border-radius: 22px;
-  display: grid;
-  place-items: center;
-  color: #ffffff;
-  font-size: 1.15rem;
-  font-weight: 800;
-  text-align: center;
-  overflow: hidden;
-  background: #f8fafc;
+  background: #eef2f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .item-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-.visual-top {
-  background: linear-gradient(180deg, #6fa4ea 0%, #5b8fd3 100%);
+.item-placeholder {
+  color: #64748b;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
-.visual-bottom {
-  background: linear-gradient(180deg, #22314f 0%, #1b2740 100%);
-}
-
-.visual-shoes {
-  background: linear-gradient(180deg, #b85c08 0%, #a14f05 100%);
-}
-
-.visual-outerwear {
-  background: linear-gradient(180deg, #9aa3b5 0%, #8b95a8 100%);
-}
-
-.item-body {
-  padding: 0 20px 20px;
+.item-details {
+  padding: 14px;
 }
 
 .item-category {
-  margin: 0 0 8px;
-  color: #64748b;
-  font-size: 0.95rem;
+  margin: 0 0 6px;
+  color: #6d7888;
+  font-size: 0.92rem;
 }
 
-.item-body h3 {
-  margin: 0 0 8px;
-  font-size: 1.1rem;
-  color: #0f172a;
+.item-details h4 {
+  margin: 0 0 6px;
+  color: #1d2433;
+  font-size: 1.15rem;
 }
 
 .item-meta {
   margin: 0;
-  color: #64748b;
-  line-height: 1.6;
+  color: #6d7888;
+  line-height: 1.4;
 }
 
-.accessories-card {
-  margin-top: 20px;
-}
-
-.accessories-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+.reason-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 18px;
   margin-bottom: 14px;
-}
-
-.accessories-badge {
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: #eef4ff;
-  color: #395b9a;
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-.accessory-chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.accessory-chip {
-  min-width: 180px;
-  max-width: 100%;
-  display: grid;
-  gap: 6px;
-  padding: 12px 14px;
-  border-radius: 16px;
-  background: #f8fafc;
-  border: 1px solid #dbe3ef;
-}
-
-.accessory-chip-title {
-  color: #0f172a;
-  font-weight: 700;
-}
-
-.accessory-chip-meta {
-  color: #64748b;
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-
-.reason-card {
-  margin-top: 20px;
 }
 
 .reason-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 14px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.reason-header h3 {
+  margin: 0;
+  color: #1d2433;
+}
+
+.scoring-link {
+  background: transparent;
+  border: none;
+  color: #47b157;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .reason-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 12px;
 }
 
 .reason-list li {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  color: #0f172a;
-  line-height: 1.6;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  color: #253041;
 }
 
 .reason-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  margin-top: 4px;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
   flex-shrink: 0;
 }
 
-.dot-0 {
-  background: #49b455;
+.reason-dot.green {
+  background: #47b157;
 }
 
-.dot-1 {
-  background: #f2b23c;
+.reason-dot.yellow {
+  background: #f0b43c;
 }
 
-.dot-2 {
-  background: #5c93e6;
+.reason-dot.blue {
+  background: #5a8dee;
 }
 
-.dot-3 {
-  background: #49b455;
-}
-
-.button-stack {
+.action-stack {
   display: grid;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 10px;
+}
+
+.save-btn,
+.secondary-btn,
+.feedback-btn {
+  height: 50px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .save-btn {
   border: none;
-  background: #4caf45;
+  background: #47b157;
   color: #ffffff;
 }
 
-.outline-btn {
-  border: 2px solid #4caf45;
+.secondary-btn {
+  border: 2px solid #47b157;
   background: #ffffff;
-  color: #4caf45;
+  color: #47b157;
 }
 
-.ghost-btn {
-  border: 1px solid #dbe3ef;
+.feedback-btn {
+  border: 1px solid #d8e0ea;
   background: #f8fafc;
-  color: #0f172a;
+  color: #1a2030;
 }
 
-.context-card h3,
-.other-card h3 {
-  margin-bottom: 18px;
+.right-column {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.side-card {
+  padding: 18px;
+}
+
+.side-card h3 {
+  margin: 0 0 14px;
+  color: #1d2433;
+}
+
+.context-list {
+  display: grid;
+  gap: 6px;
 }
 
 .context-row {
   display: flex;
   justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: 1px solid #eef2f7;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf2f7;
 }
 
 .context-row:last-child {
@@ -868,61 +745,55 @@ onMounted(() => {
 }
 
 .context-row span {
-  color: #64748b;
+  color: #6d7888;
 }
 
-.context-row strong {
-  color: #0f172a;
-  text-align: right;
-}
-
-.other-card {
+.other-outfits-list {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
-.other-outfit {
+.other-outfit-btn {
   width: 100%;
-  border: 1px solid #dbe3ef;
-  background: #f8fafc;
-  border-radius: 18px;
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
   text-align: left;
+  border: 1px solid #a8b4c7;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 12px;
   cursor: pointer;
 }
 
-.other-outfit.active {
-  border-color: #0f172a;
-  background: #eef4ff;
-}
-
-.other-outfit strong {
+.other-outfit-btn strong {
   display: block;
-  color: #0f172a;
+  margin-bottom: 6px;
+  color: #1f2937;
 }
 
-.other-outfit p {
-  margin: 4px 0 0;
-  color: #64748b;
-  line-height: 1.5;
-  font-size: 0.92rem;
+.other-outfit-btn span {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
-.status-card {
+.empty-card {
+  padding: 26px;
+  text-align: center;
   color: #475569;
 }
 
-.error-card h3 {
-  margin: 0 0 8px;
-  color: #b91c1c;
-}
+@media (max-width: 1100px) {
+  .controls-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 
-@media (max-width: 980px) {
   .results-layout {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .recommendations-page {
+    padding: 12px;
   }
 
   .controls-grid,
@@ -931,37 +802,15 @@ onMounted(() => {
     grid-template-columns: 1fr;
   }
 
-  .primary-btn {
+  .generate-btn {
     width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-card,
-  .controls-card,
-  .status-card,
-  .outfit-card,
-  .context-card,
-  .other-card,
-  .reason-card,
-  .accessories-card {
-    padding: 18px;
+    min-width: 0;
   }
 
-  .section-heading,
   .reason-header,
-  .accessories-header,
   .context-row {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .item-visual {
-    height: 180px;
-  }
-
-  .accessory-chip {
-    min-width: 100%;
   }
 }
 </style>
