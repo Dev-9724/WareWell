@@ -1,0 +1,79 @@
+[{
+  "_id": {
+    "$oid": "69bada33f4ad2871228073f2"
+  },
+  "user_id": "dev_mdx_user",
+  "outfit_id": 1,
+  "rating": "perfect",
+  "occasion": "office",
+  "timestamp": {
+    "$date": "2026-03-18T17:00:35.444Z"
+  },
+  "weights_before": {
+    "weather_fit": 0.3524,
+    "formality_match": 0.2571,
+    "colour_harmony": 0.2,
+    "usage_balance": 0.0952,
+    "comfort": 0.0952
+  },
+  "weights_after": {
+    "weather_fit": 0.3547,
+    "formality_match": 0.2639,
+    "colour_harmony": 0.2,
+    "usage_balance": 0.0907,
+    "comfort": 0.0907
+  }
+},
+{
+  "_id": {
+    "$oid": "69bada43f4ad2871228073f3"
+  },
+  "user_id": "dev_mdx_user",
+  "outfit_id": 1,
+  "rating": "okay",
+  "occasion": "smart-casual",
+  "timestamp": {
+    "$date": "2026-03-18T17:00:51.757Z"
+  },
+  "weights_before": {
+    "weather_fit": 0.3547,
+    "formality_match": 0.2639,
+    "colour_harmony": 0.2,
+    "usage_balance": 0.0907,
+    "comfort": 0.0907
+  },
+  "weights_after": {
+    "weather_fit": 0.3477,
+    "formality_match": 0.2587,
+    "colour_harmony": 0.1961,
+    "usage_balance": 0.0987,
+    "comfort": 0.0987
+  }
+},
+{
+  "_id": {
+    "$oid": "69cbddf3ce23bbadcac6a9c1"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "outfit_id": "outfit-1",
+  "rating": "okay",
+  "occasion": "casual",
+  "comment": "this is good",
+  "timestamp": {
+    "$date": "2026-03-31T14:45:07.333Z"
+  },
+  "weights_before": {
+    "weather_fit": 0.3477,
+    "formality_match": 0.2587,
+    "colour_harmony": 0.1961,
+    "usage_balance": 0.0987,
+    "comfort": 0.0987
+  },
+  "weights_after": {
+    "weather_fit": 0.3409,
+    "formality_match": 0.2537,
+    "colour_harmony": 0.1923,
+    "usage_balance": 0.1066,
+    "comfort": 0.1066
+  }
+}]

@@ -1,0 +1,480 @@
+[{
+  "_id": {
+    "$oid": "69b5dfe1227e1e8777b1abe1"
+  },
+  "temperature": 5,
+  "humidity": 65,
+  "wind": 5.4,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-03-14T22:23:29.245Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69b5e04c227e1e8777b1abe2"
+  },
+  "temperature": 9.1,
+  "humidity": 80,
+  "wind": 10,
+  "rain": 0,
+  "condition": "Mist",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-03-14T22:25:16.470Z"
+  },
+  "source": "manual"
+},
+{
+  "_id": {
+    "$oid": "69d4fa799e47285b4299c942"
+  },
+  "temperature": 19.3,
+  "humidity": 43,
+  "wind": 18.4,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T12:37:13.716Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d4fa9f9e47285b4299c943"
+  },
+  "temperature": 19.3,
+  "humidity": 43,
+  "wind": 18.4,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T12:37:51.181Z"
+  },
+  "source": "manual"
+},
+{
+  "_id": {
+    "$oid": "69d559f289ad806c6c7784f5"
+  },
+  "temperature": 27.2,
+  "humidity": 45,
+  "wind": 22,
+  "rain": 0,
+  "condition": "Mist",
+  "city": "Ahmedabad",
+  "timestamp": {
+    "$date": "2026-04-07T19:24:34.076Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d562993c24d58a2eaa7ad2"
+  },
+  "temperature": 14.3,
+  "humidity": 55,
+  "wind": 11.2,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T20:01:29.826Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d562b83c24d58a2eaa7ad3"
+  },
+  "temperature": 14.3,
+  "humidity": 55,
+  "wind": 11.2,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T20:02:00.801Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d562cd3c24d58a2eaa7ad4"
+  },
+  "temperature": 14.3,
+  "humidity": 55,
+  "wind": 11.2,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T20:02:21.091Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d562d23c24d58a2eaa7ad5"
+  },
+  "temperature": 14.3,
+  "humidity": 55,
+  "wind": 11.2,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T20:02:26.936Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d562dc3c24d58a2eaa7ad6"
+  },
+  "temperature": 14.3,
+  "humidity": 55,
+  "wind": 11.2,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T20:02:36.586Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d562fa3c24d58a2eaa7ad7"
+  },
+  "temperature": 27.1,
+  "humidity": 51,
+  "wind": 22,
+  "rain": 0,
+  "condition": "Mist",
+  "city": "Ahmedabad",
+  "timestamp": {
+    "$date": "2026-04-07T20:03:06.433Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d5630f3c24d58a2eaa7ad8"
+  },
+  "temperature": 12.2,
+  "humidity": 71,
+  "wind": 6.5,
+  "rain": 0,
+  "condition": "Cloudy",
+  "city": "Edinburgh",
+  "timestamp": {
+    "$date": "2026-04-07T20:03:27.295Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d563193c24d58a2eaa7ad9"
+  },
+  "temperature": 16.2,
+  "humidity": 63,
+  "wind": 11.5,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "Paris",
+  "timestamp": {
+    "$date": "2026-04-07T20:03:37.617Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d563213c24d58a2eaa7ada"
+  },
+  "temperature": 16.2,
+  "humidity": 63,
+  "wind": 11.5,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "Paris",
+  "timestamp": {
+    "$date": "2026-04-07T20:03:45.160Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d563fe3c24d58a2eaa7adb"
+  },
+  "temperature": 16.1,
+  "humidity": 63,
+  "wind": 11.5,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "Paris",
+  "timestamp": {
+    "$date": "2026-04-07T20:07:26.192Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d563ff3c24d58a2eaa7adc"
+  },
+  "temperature": 16.1,
+  "humidity": 63,
+  "wind": 11.5,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "Paris",
+  "timestamp": {
+    "$date": "2026-04-07T20:07:27.683Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d564463c24d58a2eaa7add"
+  },
+  "temperature": 14.1,
+  "humidity": 55,
+  "wind": 11.2,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T20:08:38.882Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d571313c24d58a2eaa7ade"
+  },
+  "temperature": 13.3,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:03:45.961Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d571413c24d58a2eaa7adf"
+  },
+  "temperature": 13.3,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:04:01.546Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d5714b3c24d58a2eaa7ae0"
+  },
+  "temperature": 13.3,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:04:11.497Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d572343c24d58a2eaa7ae1"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:08:04.093Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d573853c24d58a2eaa7ae2"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:13:41.895Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d5738f3c24d58a2eaa7ae3"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:13:51.646Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d573993c24d58a2eaa7ae4"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:14:01.306Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d574193c24d58a2eaa7ae5"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:16:09.793Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d574eb3c24d58a2eaa7ae6"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:19:39.596Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d574f03c24d58a2eaa7ae7"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:19:44.579Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d5754e3c24d58a2eaa7ae8"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:21:18.215Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d575593c24d58a2eaa7ae9"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:21:29.411Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d575603c24d58a2eaa7aea"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:21:36.655Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d576053c24d58a2eaa7aeb"
+  },
+  "temperature": 26.2,
+  "humidity": 61,
+  "wind": 18.4,
+  "rain": 0,
+  "condition": "Mist",
+  "city": "Ahmedabad",
+  "timestamp": {
+    "$date": "2026-04-07T21:24:21.024Z"
+  },
+  "source": "weatherapi"
+},
+{
+  "_id": {
+    "$oid": "69d5761e3c24d58a2eaa7aec"
+  },
+  "temperature": 13.1,
+  "humidity": 58,
+  "wind": 9,
+  "rain": 0,
+  "condition": "Clear",
+  "city": "London",
+  "timestamp": {
+    "$date": "2026-04-07T21:24:46.543Z"
+  },
+  "source": "weatherapi"
+}]

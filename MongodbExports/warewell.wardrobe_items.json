@@ -1,0 +1,1258 @@
+[{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d3"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black T-Shirt",
+  "category": "Top",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "spring",
+    "summer"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 30,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 12,
+  "image_url": "https://images.unsplash.com/photo-1503341504253-dff4815485f1"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d4"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "White T-Shirt",
+  "category": "Top",
+  "occasion": "Casual",
+  "colour_primary": "White",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "spring",
+    "summer"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 30,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 12,
+  "image_url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d5"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Green Oversized Tee",
+  "category": "Top",
+  "occasion": "Casual",
+  "colour_primary": "Green",
+  "colour_secondary": null,
+  "formality_level": 3,
+  "season": [
+    "spring",
+    "summer"
+  ],
+  "temperature_min": 12,
+  "temperature_max": 30,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 15,
+  "image_url": "https://images.unsplash.com/photo-1585386959984-a4155224a1ad"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d6"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Blue Oxford Shirt",
+  "category": "Top",
+  "occasion": "Office",
+  "colour_primary": "Blue",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 22,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 28,
+  "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d7"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "White Office Shirt",
+  "category": "Top",
+  "occasion": "Office",
+  "colour_primary": "White",
+  "colour_secondary": null,
+  "formality_level": 8,
+  "season": [
+    "spring",
+    "summer",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 24,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 30,
+  "image_url": "https://images.unsplash.com/photo-1520975916090-3105956dac38"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d8"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Light Blue Formal Shirt",
+  "category": "Top",
+  "occasion": "Formal",
+  "colour_primary": "Blue",
+  "colour_secondary": null,
+  "formality_level": 9,
+  "season": [
+    "spring",
+    "summer",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 24,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 34,
+  "image_url": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32d9"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Party Shirt",
+  "category": "Top",
+  "occasion": "Party",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 22,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 32,
+  "image_url": "https://images.unsplash.com/photo-1603252109303-2751441dd157"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32da"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Cream Party Blouse",
+  "category": "Top",
+  "occasion": "Party",
+  "colour_primary": "Cream",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "summer",
+    "autumn"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 25,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 29,
+  "image_url": "https://images.unsplash.com/photo-1551232864-3f0890e580d9"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32db"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Grey Joggers",
+  "category": "Bottom",
+  "occasion": "Casual",
+  "colour_primary": "Grey",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 22,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 22,
+  "image_url": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32dc"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Blue Jeans",
+  "category": "Bottom",
+  "occasion": "Casual",
+  "colour_primary": "Blue",
+  "colour_secondary": null,
+  "formality_level": 3,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 22,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 30,
+  "image_url": "https://images.unsplash.com/photo-1582552938357-32b906df40cb"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32dd"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Chinos",
+  "category": "Bottom",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "spring",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 24,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 27,
+  "image_url": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32de"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Trousers",
+  "category": "Bottom",
+  "occasion": "Office",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 8,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 40,
+  "image_url": "https://images.unsplash.com/photo-1506629905607-46c46ad6d6a3"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32df"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Khaki Office Pants",
+  "category": "Bottom",
+  "occasion": "Office",
+  "colour_primary": "Khaki",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "summer",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 24,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 34,
+  "image_url": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e0"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Navy Formal Trousers",
+  "category": "Bottom",
+  "occasion": "Formal",
+  "colour_primary": "Navy",
+  "colour_secondary": null,
+  "formality_level": 9,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 45,
+  "image_url": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e1"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Slim Formal Trousers",
+  "category": "Bottom",
+  "occasion": "Formal",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 9,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 46,
+  "image_url": "https://images.unsplash.com/photo-1507679799987-c73779587ccf"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e2"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Party Trousers",
+  "category": "Bottom",
+  "occasion": "Party",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 6,
+  "temperature_max": 22,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 38,
+  "image_url": "https://images.unsplash.com/photo-1552902865-b72c031ac5ea"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e3"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "White Sneakers",
+  "category": "Shoes",
+  "occasion": "Casual",
+  "colour_primary": "White",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "spring",
+    "summer"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 30,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 50,
+  "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e4"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Trainers",
+  "category": "Shoes",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 3,
+  "season": [
+    "spring",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 25,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 52,
+  "image_url": "https://images.unsplash.com/photo-1543508282-6319a3e2621f"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e5"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Brown Loafers",
+  "category": "Shoes",
+  "occasion": "Office",
+  "colour_primary": "Brown",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "summer",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 24,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 60,
+  "image_url": "https://images.unsplash.com/photo-1614252235316-8c857d38b5f4"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e6"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Formal Shoes",
+  "category": "Shoes",
+  "occasion": "Office",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 9,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 65,
+  "image_url": "https://images.unsplash.com/photo-1614252369475-531eba835eb1"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e7"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Patent Party Shoes",
+  "category": "Shoes",
+  "occasion": "Party",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 8,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 6,
+  "temperature_max": 22,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 68,
+  "image_url": "https://images.unsplash.com/photo-1449505278894-297fdb3edbc1"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e8"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Brown Oxford Shoes",
+  "category": "Shoes",
+  "occasion": "Formal",
+  "colour_primary": "Brown",
+  "colour_secondary": null,
+  "formality_level": 10,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 75,
+  "image_url": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32e9"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Derby Shoes",
+  "category": "Shoes",
+  "occasion": "Formal",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 10,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 78,
+  "image_url": "https://images.unsplash.com/photo-1543163521-1bf539c55dd2"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32ea"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Denim Jacket",
+  "category": "Outerwear",
+  "occasion": "Casual",
+  "colour_primary": "Blue",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "spring",
+    "autumn"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 20,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 45,
+  "image_url": "https://images.unsplash.com/photo-1520975922327-2c4d5d3c5f8d"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32eb"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Leather Jacket",
+  "category": "Outerwear",
+  "occasion": "Party",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 6,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 18,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 95,
+  "image_url": "https://images.unsplash.com/photo-1551028719-00167b16eac5"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32ec"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Grey Blazer",
+  "category": "Outerwear",
+  "occasion": "Office",
+  "colour_primary": "Grey",
+  "colour_secondary": null,
+  "formality_level": 8,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 18,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 80,
+  "image_url": "https://images.unsplash.com/photo-1592878904946-b3cd93f3f28f"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32ed"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Navy Suit Blazer",
+  "category": "Outerwear",
+  "occasion": "Formal",
+  "colour_primary": "Navy",
+  "colour_secondary": null,
+  "formality_level": 10,
+  "season": [
+    "spring",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 18,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 110,
+  "image_url": "https://images.unsplash.com/photo-1593032465171-8b88b3c8e5d6"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32ee"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Beige Trench Coat",
+  "category": "Outerwear",
+  "occasion": "Office",
+  "colour_primary": "Beige",
+  "colour_secondary": null,
+  "formality_level": 8,
+  "season": [
+    "spring",
+    "autumn"
+  ],
+  "temperature_min": 6,
+  "temperature_max": 18,
+  "rain_suitable": true,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 98,
+  "image_url": "https://images.unsplash.com/photo-1544441893-675973e31985"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32ef"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Silver Watch",
+  "category": "Accessory",
+  "occasion": "Formal",
+  "colour_primary": "Silver",
+  "colour_secondary": null,
+  "formality_level": 8,
+  "season": [
+    "spring",
+    "summer",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 0,
+  "temperature_max": 40,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 120,
+  "image_url": "https://images.unsplash.com/photo-1524592094714-0f0654e20314"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32f0"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Black Sunglasses",
+  "category": "Accessory",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "spring",
+    "summer"
+  ],
+  "temperature_min": 12,
+  "temperature_max": 35,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 24,
+  "image_url": "https://images.unsplash.com/photo-1511499767150-a48a237f0083"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32f1"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Brown Leather Belt",
+  "category": "Accessory",
+  "occasion": "Office",
+  "colour_primary": "Brown",
+  "colour_secondary": null,
+  "formality_level": 7,
+  "season": [
+    "spring",
+    "summer",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 0,
+  "temperature_max": 40,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 22,
+  "image_url": "https://images.unsplash.com/photo-1624222247344-550fb60583dc"
+},
+{
+  "_id": {
+    "$oid": "69d50527d58d17e3befb32f2"
+  },
+  "user_id": "69c70d9c9f2a43ca79897e56",
+  "name": "Gold Chain",
+  "category": "Accessory",
+  "occasion": "Party",
+  "colour_primary": "Gold",
+  "colour_secondary": null,
+  "formality_level": 6,
+  "season": [
+    "spring",
+    "summer",
+    "autumn",
+    "winter"
+  ],
+  "temperature_min": 0,
+  "temperature_max": 40,
+  "rain_suitable": false,
+  "wear_count": 0,
+  "last_worn_date": null,
+  "cost": 35,
+  "image_url": "https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d2"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Black T-Shirt",
+  "category": "Top",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "Spring",
+    "Summer"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 30,
+  "rain_suitable": false,
+  "wear_count": 5,
+  "last_worn_date": null,
+  "cost": 12,
+  "image_url": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d3"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "White Formal Shirt",
+  "category": "Top",
+  "occasion": "Formal",
+  "colour_primary": "White",
+  "colour_secondary": null,
+  "formality_level": 5,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 25,
+  "rain_suitable": true,
+  "wear_count": 2,
+  "last_worn_date": null,
+  "cost": 25,
+  "image_url": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d4"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Blue Casual Shirt",
+  "category": "Top",
+  "occasion": "Casual",
+  "colour_primary": "Blue",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "Spring",
+    "Autumn"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 24,
+  "rain_suitable": true,
+  "wear_count": 3,
+  "last_worn_date": null,
+  "cost": 20,
+  "image_url": "https://images.unsplash.com/photo-1585386959984-a4155224a1ad"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d5"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Grey Hoodie",
+  "category": "Top",
+  "occasion": "Casual",
+  "colour_primary": "Grey",
+  "colour_secondary": null,
+  "formality_level": 1,
+  "season": [
+    "Winter"
+  ],
+  "temperature_min": 0,
+  "temperature_max": 15,
+  "rain_suitable": false,
+  "wear_count": 6,
+  "last_worn_date": null,
+  "cost": 20,
+  "image_url": "https://images.unsplash.com/photo-1516826957135-700dedea698c"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d6"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Formal Blouse",
+  "category": "Top",
+  "occasion": "Office",
+  "colour_primary": "Cream",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 25,
+  "rain_suitable": true,
+  "wear_count": 1,
+  "last_worn_date": null,
+  "cost": 28,
+  "image_url": "https://images.unsplash.com/photo-1520975922284-9d9d2c0b6b1d"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d7"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Blue Jeans",
+  "category": "Bottom",
+  "occasion": "Casual",
+  "colour_primary": "Blue",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 25,
+  "rain_suitable": true,
+  "wear_count": 8,
+  "last_worn_date": null,
+  "cost": 30,
+  "image_url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d8"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Black Formal Trousers",
+  "category": "Bottom",
+  "occasion": "Formal",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 5,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 22,
+  "rain_suitable": true,
+  "wear_count": 3,
+  "last_worn_date": null,
+  "cost": 35,
+  "image_url": "https://images.unsplash.com/photo-1593032465171-8f3a9c1d9d69"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269d9"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Grey Office Pants",
+  "category": "Bottom",
+  "occasion": "Office",
+  "colour_primary": "Grey",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 8,
+  "temperature_max": 24,
+  "rain_suitable": true,
+  "wear_count": 2,
+  "last_worn_date": null,
+  "cost": 32,
+  "image_url": "https://images.unsplash.com/photo-1520974735194-ecb1f0a2c79b"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269da"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Black Joggers",
+  "category": "Bottom",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 1,
+  "season": [
+    "Winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 18,
+  "rain_suitable": false,
+  "wear_count": 10,
+  "last_worn_date": null,
+  "cost": 18,
+  "image_url": "https://images.unsplash.com/photo-1592878849122-0b6d4b2c0f2f"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269db"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Beige Shorts",
+  "category": "Bottom",
+  "occasion": "Casual",
+  "colour_primary": "Beige",
+  "colour_secondary": null,
+  "formality_level": 1,
+  "season": [
+    "Summer"
+  ],
+  "temperature_min": 18,
+  "temperature_max": 35,
+  "rain_suitable": false,
+  "wear_count": 2,
+  "last_worn_date": null,
+  "cost": 16,
+  "image_url": "https://images.unsplash.com/photo-1506629905607-6c8c9d0b4c1d"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269dc"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Leather Jacket",
+  "category": "Outerwear",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 3,
+  "season": [
+    "Winter"
+  ],
+  "temperature_min": -2,
+  "temperature_max": 15,
+  "rain_suitable": true,
+  "wear_count": 2,
+  "last_worn_date": null,
+  "cost": 60,
+  "image_url": "https://images.unsplash.com/photo-1521335629791-ce4aec67dd47"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269dd"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Formal Blazer",
+  "category": "Outerwear",
+  "occasion": "Formal",
+  "colour_primary": "Grey",
+  "colour_secondary": null,
+  "formality_level": 5,
+  "season": [
+    "Spring"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 20,
+  "rain_suitable": false,
+  "wear_count": 1,
+  "last_worn_date": null,
+  "cost": 55,
+  "image_url": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269de"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Raincoat",
+  "category": "Outerwear",
+  "occasion": "Casual",
+  "colour_primary": "Green",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "Autumn"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 18,
+  "rain_suitable": true,
+  "wear_count": 1,
+  "last_worn_date": null,
+  "cost": 45,
+  "image_url": "https://images.unsplash.com/photo-1544441893-675973e31985"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269df"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "White Sneakers",
+  "category": "Shoes",
+  "occasion": "Casual",
+  "colour_primary": "White",
+  "colour_secondary": null,
+  "formality_level": 1,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 30,
+  "rain_suitable": false,
+  "wear_count": 10,
+  "last_worn_date": null,
+  "cost": 40,
+  "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e0"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Black Formal Shoes",
+  "category": "Shoes",
+  "occasion": "Formal",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 5,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 0,
+  "temperature_max": 25,
+  "rain_suitable": true,
+  "wear_count": 4,
+  "last_worn_date": null,
+  "cost": 50,
+  "image_url": "https://images.unsplash.com/photo-1519741497674-611481863552"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e1"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Running Shoes",
+  "category": "Shoes",
+  "occasion": "Casual",
+  "colour_primary": "Grey",
+  "colour_secondary": "White",
+  "formality_level": 1,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 5,
+  "temperature_max": 28,
+  "rain_suitable": false,
+  "wear_count": 6,
+  "last_worn_date": null,
+  "cost": 35,
+  "image_url": "https://images.unsplash.com/photo-1600180758890-6b94519a8ba6"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e2"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Silver Watch",
+  "category": "Accessory",
+  "occasion": "Formal",
+  "colour_primary": "Silver",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 0,
+  "temperature_max": 35,
+  "rain_suitable": true,
+  "wear_count": 5,
+  "last_worn_date": null,
+  "cost": 45,
+  "image_url": "https://images.unsplash.com/photo-1511499767150-a48a237f0083"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e3"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Black Sunglasses",
+  "category": "Accessory",
+  "occasion": "Casual",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 2,
+  "season": [
+    "Summer"
+  ],
+  "temperature_min": 20,
+  "temperature_max": 35,
+  "rain_suitable": false,
+  "wear_count": 3,
+  "last_worn_date": null,
+  "cost": 15,
+  "image_url": "https://images.unsplash.com/photo-1517841905240-472988babdf9"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e4"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Party Dress",
+  "category": "Top",
+  "occasion": "Party",
+  "colour_primary": "Red",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 12,
+  "temperature_max": 26,
+  "rain_suitable": false,
+  "wear_count": 1,
+  "last_worn_date": null,
+  "cost": 40,
+  "image_url": "https://dummyimage.com/400x600/e5e7eb/374151.png&text=Party+Dress"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e5"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Office Skirt",
+  "category": "Bottom",
+  "occasion": "Office",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 4,
+  "season": [
+    "Spring",
+    "Summer",
+    "Autumn",
+    "Winter"
+  ],
+  "temperature_min": 10,
+  "temperature_max": 25,
+  "rain_suitable": false,
+  "wear_count": 2,
+  "last_worn_date": null,
+  "cost": 28,
+  "image_url": "https://dummyimage.com/400x600/e5e7eb/374151.png&text=Office+Skirt"
+},
+{
+  "_id": {
+    "$oid": "69d91c08425475b0cb5269e6"
+  },
+  "user_id": "69d9158e8c977eb128901e40",
+  "name": "Formal Coat",
+  "category": "Outerwear",
+  "occasion": "Formal",
+  "colour_primary": "Black",
+  "colour_secondary": null,
+  "formality_level": 5,
+  "season": [
+    "Winter"
+  ],
+  "temperature_min": -5,
+  "temperature_max": 10,
+  "rain_suitable": true,
+  "wear_count": 1,
+  "last_worn_date": null,
+  "cost": 80,
+  "image_url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf"
+}]

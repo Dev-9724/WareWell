@@ -1,0 +1,781 @@
+{
+  "info": {
+    "_postman_id": "e16f9d97-4496-40bf-a7c5-40d774203b30",
+    "name": "WareWell API - Ready Collection",
+    "description": "Ready-to-import Postman collection for the WareWell FastAPI project.\n\nNotes:\n- Auth, wardrobe, feedback, and manual weather bodies are based on the Swagger routes and report/UI descriptions.\n- Recommendation and evaluation endpoints appear to rely mainly on query parameters such as user_id, occasion, top_k, and max_outfits.\n- Replace placeholder environment values before running.\n",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40179977"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/signup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            },
+            "description": "Create a new user account."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login with email and password."
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "description": "Request a password reset link/token."
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{resetToken}}\",\n  \"new_password\": \"{{newPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            },
+            "description": "Reset password using a token."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me/:user_id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}"
+                }
+              ]
+            },
+            "description": "Get public user details by user_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Wardrobe",
+      "item": [
+        {
+          "name": "Get All Wardrobe Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wardrobe/items?user_id=69c70d9c9f2a43ca79897e56",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wardrobe",
+                "items"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "69c70d9c9f2a43ca79897e56"
+                }
+              ]
+            },
+            "description": "List all wardrobe items."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Wardrobe Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Light Blue Oxford Shirt\",\n  \"category\": \"top\",\n  \"primary_color\": \"blue\",\n  \"secondary_color\": \"white\",\n  \"occasion\": \"formal\",\n  \"season\": [\n    \"spring\",\n    \"autumn\"\n  ],\n  \"rain_suitable\": false,\n  \"cost\": 35.99,\n  \"wear_count\": 2,\n  \"formality_level\": 8,\n  \"temperature_min\": 10,\n  \"temperature_max\": 24,\n  \"image_url\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wardrobe/items",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wardrobe",
+                "items"
+              ]
+            },
+            "description": "Create a wardrobe item. Fields are based on the Add Item form and report."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Wardrobe Item By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wardrobe/items/:item_id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wardrobe",
+                "items",
+                ":item_id"
+              ],
+              "variable": [
+                {
+                  "key": "item_id",
+                  "value": "{{itemId}}"
+                }
+              ]
+            },
+            "description": "Fetch one wardrobe item by item_id."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Wardrobe Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Light Blue Oxford Shirt\",\n  \"category\": \"top\",\n  \"primary_color\": \"blue\",\n  \"secondary_color\": \"white\",\n  \"occasion\": \"formal\",\n  \"season\": [\n    \"spring\",\n    \"autumn\"\n  ],\n  \"rain_suitable\": false,\n  \"cost\": 35.99,\n  \"wear_count\": 3,\n  \"formality_level\": 8,\n  \"temperature_min\": 10,\n  \"temperature_max\": 24,\n  \"image_url\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/wardrobe/items/:item_id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wardrobe",
+                "items",
+                ":item_id"
+              ],
+              "variable": [
+                {
+                  "key": "item_id",
+                  "value": "{{itemId}}"
+                }
+              ]
+            },
+            "description": "Update an existing wardrobe item."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Wardrobe Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/wardrobe/items/:item_id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "wardrobe",
+                "items",
+                ":item_id"
+              ],
+              "variable": [
+                {
+                  "key": "item_id",
+                  "value": "{{itemId}}"
+                }
+              ]
+            },
+            "description": "Delete an item by item_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Weather",
+      "item": [
+        {
+          "name": "Get Current Weather",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/weather/current?city=London",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "weather",
+                "current"
+              ],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "London"
+                }
+              ]
+            },
+            "description": "Fetch current live weather."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Manual Weather Snapshot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"temperature\": 18,\n  \"humidity\": 42,\n  \"wind\": 10.8,\n  \"rain\": 0,\n  \"condition\": \"Cloudy\",\n  \"city\": \"{{city}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/weather/manual",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "weather",
+                "manual"
+              ]
+            },
+            "description": "Store a manual weather snapshot."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Weather",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/weather/latest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "weather",
+                "latest"
+              ]
+            },
+            "description": "Get the latest stored weather snapshot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Recommendations",
+      "item": [
+        {
+          "name": "Filter Wardrobe Items",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recommend/filter?user_id={{userId}}&occasion={{occasion}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recommend",
+                "filter"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "occasion",
+                  "value": "{{occasion}}"
+                }
+              ]
+            },
+            "description": "Filter wardrobe items using context constraints. This endpoint appears to use query params rather than a JSON body."
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Outfits",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recommend/outfits?user_id={{userId}}&occasion={{occasion}}&max_outfits={{maxOutfits}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recommend",
+                "outfits"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "occasion",
+                  "value": "{{occasion}}"
+                },
+                {
+                  "key": "max_outfits",
+                  "value": "{{maxOutfits}}"
+                }
+              ]
+            },
+            "description": "Generate valid outfit combinations after constraint filtering."
+          },
+          "response": []
+        },
+        {
+          "name": "Ranked Outfits",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recommend/ranked-outfits?user_id={{userId}}&occasion={{occasion}}&top_k={{topK}}&max_outfits={{maxOutfits}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recommend",
+                "ranked-outfits"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "occasion",
+                  "value": "{{occasion}}"
+                },
+                {
+                  "key": "top_k",
+                  "value": "{{topK}}"
+                },
+                {
+                  "key": "max_outfits",
+                  "value": "{{maxOutfits}}"
+                }
+              ]
+            },
+            "description": "Generate ranked outfits. Your earlier 422 error shows user_id is required as a query parameter."
+          },
+          "response": []
+        },
+        {
+          "name": "Explanations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/recommend/explanations?user_id={{userId}}&occasion={{occasion}}&top_k={{topK}}&max_outfits={{maxOutfits}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "recommend",
+                "explanations"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "occasion",
+                  "value": "{{occasion}}"
+                },
+                {
+                  "key": "top_k",
+                  "value": "{{topK}}"
+                },
+                {
+                  "key": "max_outfits",
+                  "value": "{{maxOutfits}}"
+                }
+              ]
+            },
+            "description": "Generate explanation payloads for recommended outfits."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Feedback",
+      "item": [
+        {
+          "name": "Submit Feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{userId}}\",\n  \"occasion\": \"{{occasion}}\",\n  \"feedback_type\": \"good\",\n  \"comment\": \"Suitable for the weather and occasion.\",\n  \"outfit_id\": \"{{outfitId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback/submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback",
+                "submit"
+              ]
+            },
+            "description": "Submit feedback for a selected recommendation."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Weights",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/feedback/weights",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback",
+                "weights"
+              ]
+            },
+            "description": "Fetch the current scoring weights."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Feedback Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/feedback/logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback",
+                "logs"
+              ]
+            },
+            "description": "List feedback history."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Evaluation",
+      "item": [
+        {
+          "name": "Compare Models",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/evaluation/compare?user_id={{userId}}&occasion={{occasion}}&top_k={{topK}}&max_outfits={{maxOutfits}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "evaluation",
+                "compare"
+              ],
+              "query": [
+                {
+                  "key": "user_id",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "occasion",
+                  "value": "{{occasion}}"
+                },
+                {
+                  "key": "top_k",
+                  "value": "{{topK}}"
+                },
+                {
+                  "key": "max_outfits",
+                  "value": "{{maxOutfits}}"
+                }
+              ]
+            },
+            "description": "Run baseline vs hybrid comparison. This endpoint appears to rely on query params."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Default",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DB Ping",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/db/ping",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "db",
+                "ping"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "username",
+      "value": "dev_user"
+    },
+    {
+      "key": "email",
+      "value": "user1@example.com"
+    },
+    {
+      "key": "password",
+      "value": "Test@1234"
+    },
+    {
+      "key": "newPassword",
+      "value": "NewTest@1234"
+    },
+    {
+      "key": "resetToken",
+      "value": "paste-reset-token-here"
+    },
+    {
+      "key": "userId",
+      "value": "dev_user"
+    },
+    {
+      "key": "itemId",
+      "value": "paste-item-id-here"
+    },
+    {
+      "key": "occasion",
+      "value": "formal"
+    },
+    {
+      "key": "topK",
+      "value": "5"
+    },
+    {
+      "key": "maxOutfits",
+      "value": "20"
+    },
+    {
+      "key": "city",
+      "value": "Ahmedabad"
+    },
+    {
+      "key": "outfitId",
+      "value": "paste-outfit-id-here"
+    }
+  ]
+}

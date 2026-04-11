@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "69b5e60cc855a46349b4af19"
+  },
+  "model_name": "hybrid_recommender",
+  "weights": {
+    "weather_fit": 0.3409,
+    "formality_match": 0.2537,
+    "colour_harmony": 0.1923,
+    "usage_balance": 0.1066,
+    "comfort": 0.1066
+  },
+  "updated_at": {
+    "$date": "2026-03-31T14:45:07.313Z"
+  }
+}]
